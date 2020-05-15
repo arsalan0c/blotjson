@@ -1,0 +1,17 @@
+{
+  "name": "blot",
+  "version": "1.0.0",
+  "description": "blot module to ease visualisation of json data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Saad Haider",
+  "license": "ISC",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "express": "^4.17.1",
+    "opn": "^6.0.0",
+    "websocket": "^1.0.31"
+  }
+}
