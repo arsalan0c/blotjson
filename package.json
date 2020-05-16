@@ -11,6 +11,8 @@
   "dependencies": {
     "child_process": "^1.0.2",
     "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "open": "^7.0.3",
     "opn": "^6.0.0",
     "websocket": "^1.0.31"
   }

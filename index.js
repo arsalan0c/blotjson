@@ -1,54 +1,103 @@
 const http = require("http");
+const open = require("open");
 const fs = require("fs");
-var opn = require("opn");
-// const childProc = require('child_process');
+const WebSocketServer = require("websocket").server; // websocket server class
 
-const WebSocketServer = require("websocket").server;
+let webSocket = null;
+// connection variable, to refer to the web socket connection to the client once connection is established
 let connection = null;
-let port = 9101;
+// default port used if none is specified by the user
+let defaultPort = 9101;
+const host = "http://127.0.0.1";
 
-exports.visualise = jsonData => {
+// check if a browser window is already open
+let isRunning = false;
 
-  // open index.html in the browser
-  opn("./index.html");
 
-  // create http Server
-  const httpServer = http.createServer((req, res) => {
-    res.writeHead(200, {
-      'Content-Type': 'text/html'
+exports.visualise = function visualise(jsonData, port = defaultPort) {
+
+  // overhead of server creation only done on first call
+  if (!isRunning) {
+    isRunning = true;
+
+    // open index.html in the browser
+    open("http://127.0.0.1:" + port);
+
+    // create http Server
+    const httpServer = http.createServer((req, res) => {
+
+      // check if the which files to render
+      var url = req.url;
+
+      switch (url) {
+        case '/':
+          getStaticFileContent(res, 'public/index.html', 'text/html');
+          break;
+        case '/public/test.js':
+          getStaticFileContent(res, 'public/test.js', 'text/javascript');
+          break;
+        default:
+
+          res.writeHead(404, {
+            'Content-Type': 'text/plain'
+          });
+          res.end('404 - Page not Found');
+          break;
+      }
+
     });
-    //
-    // fs.readFile("./index.html", null, (err, data) => {
-    //   if (err) {
-    //     res.writeHead(404);
-    //     res.write("File not found!");
-    //   } else {
-    //     res.write(data);
-    //   }
-    //   res.end();
-    // });
-    // app.sendFile("./index.html");
 
-  });
+    httpServer.listen(port, (req, res) => {
+      console.log("Server listening on port " + port);
+    });
 
-  httpServer.listen(port, (req, res) => {
-    console.log("Server listening on port " + port);
-  });
+    webSocket = new WebSocketServer({
+      "httpServer": httpServer
+    });
 
-  const webSocket = new WebSocketServer({
-    "httpServer": httpServer
-  });
+    webSocket.on("request", request => {
 
-  webSocket.on("request", request => {
+      // accept request
+      connection = request.accept(null, request.origin);
 
-    // accept request
-    connection = request.accept(null, request.origin);
+      connection.send(JSON.stringify(jsonData));
 
-    // send data
+      connection.on("close", () => console.log("Connection closed"));
+      connection.on("message", message => console.log("hey now brown cow"));
+
+    });
+
+  } else if (connection == null) {
+    setTimeout(() => visualise(jsonData, port), 500);
+  } else {
     connection.send(JSON.stringify(jsonData));
-    connection.on("close", () => console.log("Connection closed"));
-    connection.on("message", message => console.log("hey now brown cow"));
+  }
 
+  // connection.send(jsonData, connection);
+  // sendData(jsonData, connection);
+
+}
+
+// From StackOverflow
+// for rendering static files
+function getStaticFileContent(response, filepath, contentType) {
+  fs.readFile(filepath, function(error, data) {
+    if (error) {
+      response.writeHead(500, {
+        'Content-Type': 'text/plain'
+      });
+      response.end('500 - Internal Server Error');
+    }
+    if (data) {
+      response.writeHead(200, {
+        'Content-Type': contentType
+      });
+      response.end(data);
+    } else {
+      response.writeHead(200, {
+        'Content-Type': contentType
+      });
+      response.end(content, 'utf-8');
+    }
   });
-
-};
+}
