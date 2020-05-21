@@ -8,7 +8,7 @@ let webSocket = new WebSocket("ws://" + host);
 
 webSocket.onmessage = jsonData => {
   jsonObjects.push(JSON.parse(jsonData.data));
-
+  console.log(jsonObjects);
   displayData();
 };
 
@@ -26,7 +26,7 @@ function displayData() {
 
 // provide html for one object
 function jsonHTML(jsonData) {
-  
+
   let result = "<div>";
 
   for (item in jsonData) {
