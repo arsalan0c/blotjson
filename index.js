@@ -3,38 +3,52 @@ const open = require("open");
 const fs = require("fs");
 const WebSocketServer = require("websocket").server; // websocket server class
 
+/**
+  CONSTANTS
+**/
+
+// Frontend file paths
+const HTML_FILE_PATH = "index.html";
+const JS_FILE_PATH = "frontend.js";
+
+// Host and default port (if none is specified)
+const DEFAULT_PORT = 9101;
+const HOST = "http://127.0.0.1";
+
+
+/**
+  NETWORKING VARIABLES
+**/
+
 let webSocket = null;
+
 // connection variable, to refer to the web socket connection to the client once connection is established
 let connection = null;
-// default port used if none is specified by the user
-let defaultPort = 9101;
-const host = "http://127.0.0.1";
+
 
 // check if a browser window is already open
 let isRunning = false;
 
-
-exports.visualise = function visualise(jsonData, port = defaultPort) {
+/**
+ * @param {String} jsonStr "Stringified JSON data to be viewed"
+ * @param {Number} port "Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user"
+ */
+exports.visualise = function visualise(jsonStr, port = defaultPort) {
 
   // overhead of server creation only done on first call
   if (!isRunning) {
     isRunning = true;
 
-    // open index.html in the browser
-    open("http://127.0.0.1:" + port);
-
     // create http Server
     const httpServer = http.createServer((req, res) => {
 
-      // check if the which files to render
-      var url = req.url;
-
-      switch (url) {
+      // render appropriate files
+      switch (req.url) {
         case '/':
-          getStaticFileContent(res, 'public/index.html', 'text/html');
+          renderFrontendFile(res, HTML_FILE_PATH, 'text/html');
           break;
-        case '/public/test_websocket.js':
-          getStaticFileContent(res, 'public/test_websocket.js', 'text/javascript');
+        case JS_FILE_PATH:
+          renderFrontendFile(res, JS_FILE_PATH, 'text/javascript');
           break;
         default:
 
@@ -60,29 +74,29 @@ exports.visualise = function visualise(jsonData, port = defaultPort) {
       // accept request
       connection = request.accept(null, request.origin);
 
-      connection.send(JSON.stringify(jsonData));
-
+      // event handlers
       connection.on("close", () => console.log("Connection closed"));
-      connection.on("message", message => console.log("hey now brown cow"));
+      connection.on("message", message => console.log(message));
+
+      connection.send(jsonStr);
 
     });
 
-  } else if (connection == null) {
-    setTimeout(() => visualise(jsonData, port), 500);
-  } else {
-    connection.send(JSON.stringify(jsonData));
-  }
+    // open index.html in the browser
+    open("http://127.0.0.1:" + port);
 
-  // connection.send(jsonData, connection);
-  // sendData(jsonData, connection);
+  } else if (connection == null) {
+    setTimeout(() => visualise(jsonStr, port), 500);
+  } else {
+    connection.send(jsonStr);
+  }
 
 }
 
-// From StackOverflow
 // for rendering static files
-function getStaticFileContent(response, filepath, contentType) {
-  fs.readFile(filepath, function(error, data) {
-    if (error) {
+function renderFrontendFile(response, filepath, contentType) {
+  fs.readFile(filepath, (err, data) => {
+    if (err) {
       response.writeHead(500, {
         'Content-Type': 'text/plain'
       });
