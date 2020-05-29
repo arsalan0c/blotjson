@@ -11,7 +11,7 @@
     "url": "git+https://github.com/arsalanc-v2/blotjson.git"
   },
   "author": "Saad Haider",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/arsalanc-v2/blotjson/issues"
   },
