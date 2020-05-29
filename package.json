@@ -1,7 +1,7 @@
 {
-  "name": "blot",
+  "name": "blotjson",
   "version": "0.1.0",
-  "description": "Blot: a procedure in which proteins or nucleic acids separated on a gel are transferred directly to an immobilizing medium for identification.",
+  "description": "A module to simplify visualization of json.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
