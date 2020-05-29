@@ -1,7 +1,7 @@
 {
   "name": "blotjson",
   "version": "0.1.0",
-  "description": "A module to simplify visualization of JSON.",
+  "description": "A module to simplify visualisation of JSON.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/arsalanc-v2/blotjson.git"
   },
   "author": "Saad Haider",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/arsalanc-v2/blotjson/issues"
   },
