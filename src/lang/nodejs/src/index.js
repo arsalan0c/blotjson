@@ -23,7 +23,7 @@ let isRunning = false; // track if a browser window is already open
  * @param {String} jsonStr Stringified JSON data to be viewed
  * @param {Number} port Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
  */
-exports.visualise = function (jsonStr, port = DEFAULT_PORT) {
+exports.visualise = function visualise(jsonStr, port = DEFAULT_PORT) {
   // overhead of server creation only done on first call
   if (!isRunning) {
     isRunning = true;
