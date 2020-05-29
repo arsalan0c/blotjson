@@ -72,7 +72,7 @@ exports.visualise = function (jsonStr, port = DEFAULT_PORT) {
 }
 
 /**
- * Renders a file as a response to a request
+ * Renders a file as part of a response to a request
  * @param {*} response Object representing the response
  * @param {String} filepath Path to the file to be rendered
  * @param {String} contentType The media type of the file
