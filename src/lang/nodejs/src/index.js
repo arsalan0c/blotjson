@@ -6,7 +6,7 @@ const WebSocketServer = require("websocket").server;
 /* CONSTANTS */
 
 // Frontend file paths
-const HTML_FILE_PATH = "../frontend.html";
+const HTML_FILE_PATH = "index.html";
 const JS_FILE_PATH = "frontend.js";
 
 const DEFAULT_PORT = 9101;
@@ -23,7 +23,7 @@ let isRunning = false; // track if a browser window is already open
  * @param {String} jsonStr Stringified JSON data to be viewed
  * @param {Number} port Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
  */
-exports.visualise = function visualise(jsonStr, port = DEFAULT_PORT) {
+exports.visualise = function (jsonStr, port = DEFAULT_PORT) {
   // overhead of server creation only done on first call
   if (!isRunning) {
     isRunning = true;
@@ -47,6 +47,9 @@ exports.visualise = function visualise(jsonStr, port = DEFAULT_PORT) {
 
     httpServer.listen(port, (req, res) => {
       console.log("Server listening on port " + port);
+      
+      // show index.html in the browser
+      open("http://127.0.0.1:" + port);
     });
 
     webSocket = new WebSocketServer({
@@ -61,11 +64,7 @@ exports.visualise = function visualise(jsonStr, port = DEFAULT_PORT) {
 
       connection.send(jsonStr);
     });
-
-    // show index.html in the browser
-    open("http://127.0.0.1:" + port);
-
-  } else if (connection == null) {
+  } else if (!connection) {
     setTimeout(() => visualise(jsonStr, port), 500);
   } else {
     connection.send(jsonStr);
