@@ -1,20 +1,20 @@
-const http = require("http");
-const open = require("open");
-const fs = require("fs");
-const WebSocketServer = require("websocket").server;
+const http = require('http');
+const open = require('open');
+const fs = require('fs');
+const WebSocketServer = require('websocket').server;
 
 /* CONSTANTS */
 
 // Frontend file paths
-const HTML_FILE_PATH = "index.html";
-const JS_FILE_PATH = "frontend.js";
+const HTML_FILE_PATH = 'index.html';
+const JS_FILE_PATH = 'frontend.js';
 
 const DEFAULT_PORT = 9101;
-const HOST = "http://127.0.0.1";
+const HOST = 'http://127.0.0.1';
 
 /* NETWORKING VARIABLES */
 
-const httpServer = null;
+let httpServer = null;
 let webSocket = null;
 let connection = null; // refers to the web socket connection to the client once connection is established
 let isRunning = false; // track if a browser window is already open
@@ -25,24 +25,23 @@ let port = DEFAULT_PORT;
  * @param {String} jsonStr Stringified JSON data to be viewed
  * @param {Number} port Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
  */
-exports.visualise = function visualise(jsonStr, port = DEFAULT_PORT) {
+exports.visualise = function visualise(jsonStr) {
   // overhead of server creation only done on first call
   if (!isRunning) {
     isRunning = true;
 
     startServer(port);
-    setWebsocket();
-
+    setWebsocket(connection => connection.send(jsonStr));
   } else if (!connection) {
     setTimeout(() => visualise(jsonStr, port), 500);
   } else {
     connection.send(jsonStr);
   }
-}
+};
 
 exports.setPort = function(customPort) {
   port = customPort;
-}
+};
 
 /**
  * Renders a file as part of a response to a request
@@ -89,27 +88,28 @@ function startServer(port) {
   });
 
   httpServer.listen(port, (req, res) => {
-    console.log("Server listening on port " + port);
+    console.log('Server listening on port ' + port);
 
     // show index.html in the browser
-    open("http://127.0.0.1:" + port);
+    open(HOST + ':' + port);
   });
 }
 
 /**
  * Sets up the websocket on the server end. Defines event handlers for web socket connection.
+ * @param {*} callback Callback function which is used for sending the first set of data to the client
  */
-function setWebsocket() {
+function setWebsocket(callback) {
   webSocket = new WebSocketServer({
-    "httpServer": httpServer
+    httpServer: httpServer
   });
 
-  webSocket.on("request", request => {
+  webSocket.on('request', request => {
     connection = request.accept(null, request.origin);
 
-    connection.on("close", () => console.log("Connection closed"));
-    connection.on("message", message => console.log(message));
+    connection.on('close', () => console.log('Connection closed'));
+    connection.on('message', message => console.log(message));
 
-    connection.send(jsonStr);
+    callback(connection);
   });
 }
