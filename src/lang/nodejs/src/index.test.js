@@ -2,21 +2,21 @@ const blot = require('./index.js');
 
 describe('Falsy json Strings', () => {
   test('Tests empty string', () => {
-    expect(() => blot.visualise('')).toThrow('empty string cannot be used as an argument to visualise.');
+    expect(() => blot.visualise('')).toThrow('empty string cannot be used as an argument to visualise');
   });
 
   test('Tests null', () => {
-    expect(() => blot.visualise(null)).toThrow('null cannot be used as an argument to visualise.');
+    expect(() => blot.visualise(null)).toThrow('null cannot be used as an argument to visualise');
   });
 
   test('Tests undefined', () => {
-    expect(() => blot.visualise(undefined)).toThrow('undefined cannot be used as an argument to visualise.')
+    expect(() => blot.visualise(undefined)).toThrow('undefined cannot be used as an argument to visualise')
   });
 });
 
 
 describe('Non-string cases', () =>{
-  const message = 'non-string type cannot be used as an arguement to visualise.';
+  const message = 'non-string type cannot be used as an arguement to visualise';
   test('Integer', () => {
     expect(() => blot.visualise(27)).toThrow(message);
   });
@@ -39,37 +39,38 @@ describe('Non-string cases', () =>{
 });
 
 describe('Falsy port numbers', () => {
-  test('Zero', () => {
-    expect(() => blot.setPort(0)).toThrow('Port number cannot be set to 0');
-  });
 
   test('Port undefined', () => {
-    expect(() => blot.setPort(undefined)).toThrow('Port number cannot be undefined');
+    expect(() => blot.setPort(undefined)).toThrow('Port must be a valid integer');
   });
 
   test('Port null', () => {
-    expect(() => blot.setPort(null)).toThrow('Port number cannot be null');
+    expect(() => blot.setPort(null)).toThrow('Port must be a valid integer');
   });
+
+  test('NaN', () => {
+    expect(() => blot.setPort(NaN)).toThrow('Port must be a valid integer');
+  })
 });
 
 describe('Port number cases', () => {
   test('Float', () => {
-    expect(() => blot.setPort(1.231)).toThrow('Port number cannot be a float');
+    expect(() => blot.setPort(1.231)).toThrow('Port must be a valid integer');
   });
 
   test('Zero', () => {
-    expect(() => blot.setPort(0)).toThrow('Port number must be a positive integer');
+    expect(() => blot.setPort(0)).toThrow('Invalid port number');
   });
 
   test('Negative', () => {
-    expect(() => blot.setPort(-1234)).toThrow('Port number cannot be negative');
+    expect(() => blot.setPort(-1234)).toThrow('Invalid port number');
   });
 
   test('Function', () => {
-    expect(() => blot.setPort(() => {})).toThrow('Port number must be a number');
+    expect(() => blot.setPort(() => {})).toThrow('Port must be a valid integer');
   });
 
   test('Object', () => {
-    expect(() => blot.setPort({name : "John"})).toThrow('Port number must be a number');
+    expect(() => blot.setPort({name : "John"})).toThrow('Port must be a valid integer');
   });
 });

@@ -24,7 +24,9 @@ let port = DEFAULT_PORT;
  * Displays json data in a browser
  * @param {String} jsonStr Stringified JSON data to be viewed
  */
-exports.visualise = function visualise(jsonStr) {
+exports.visualise = visualise;
+
+function visualise(jsonStr) {
 
   // ensure jsonStr is valid
   validifyJSON(jsonStr)
@@ -50,6 +52,7 @@ exports.visualise = function visualise(jsonStr) {
  * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
  */
 exports.setPort = function(customPort) {
+  validifyPort(customPort);
   port = customPort;
   return {
     visualise: visualise
@@ -155,5 +158,17 @@ function validifyJSON(jsonStr) {
     JSON.parse(jsonStr);
   } catch (e) {
     throw 'String passed into visualise was not JSON'
+  }
+}
+
+/**
+* Validates that the port passed to setPort is a valid port number
+* @param {Number} port Port number to be validated
+*/
+function validifyPort(port) {
+  if (!Number.isInteger(port)) {
+    throw "Port must be a valid integer";
+  } else if (port <= 0 || port >= 65536) {
+    throw "Invalid port number";
   }
 }
