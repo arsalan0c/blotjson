@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <title>Blot</title>
+    <style>
+        img {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        </style>
+</head>
+<body onload="uponLoad()">
+    <img src="blot image.jpg" width= "12%" height = "12%" alt="blot logo" style="width: 12%;">
+        <div id="myData"></div>
+    <script>
+        fetch('test.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                printData(data);
+            });
+            function printData(data) {
+            // get the element
+            var mainContainer = document.getElementById("myData");
+            //loop through the data to print 
+            for (var i = 0; i < data.length; i++) {
+                //create a new div element for every data 
+                var div = document.createElement("div");
+                //fill in the div with the data
+                div.innerHTML = (i+1) + ": " + data[i].firstName
+                //append to main container
+                mainContainer.appendChild(div); 
+            }
+        }
+        function uponLoad(){
+            alert("your Json file has been visualized!")
+        }
+        /*
+        let webSocket = new WebSocket("ws;//" + host);
+        webSocket.onmessage = jsonFile => {
+            jsonObjects.push(JSON.parse(jsonFile));
+            displayData();
+        };
+        */
+    </script>
+</body>
+</html>
