@@ -1,0 +1,27 @@
+notifications:
+    email:
+        recipients:
+            - saadh98@gmail.com
+              #- umergta@gmail.com
+              #- e0412913@u.nus.edu
+        on_success: never
+        on_failure: always
+
+language: node_js 
+    node_js:
+        - "stable" 
+    before_install:
+        - "npm i -g npm@6"
+    install:
+        - npm install -g open
+        - npm install -g jest
+        - npm install -g websocket
+        - npm install -g eslint
+    script:
+        - jest src/lang/node_js/index.test.js
+             
+                  
+env:
+    - NODE_ENV="development"
+    - NODE_ENV="production";SESSION_SECRET="la li"
+
