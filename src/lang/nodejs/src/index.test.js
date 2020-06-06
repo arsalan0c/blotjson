@@ -1,42 +1,119 @@
 const blot = require('./index.js');
+const WebSocket = require('ws');
+let ws = null;
 
-describe('Falsy json Strings', () => {
-  test('Tests empty string', () => {
-    expect(() => blot.visualise('')).toThrow('empty string cannot be used as an argument to visualise');
-  });
-
-  test('Tests null', () => {
-    expect(() => blot.visualise(null)).toThrow('null cannot be used as an argument to visualise');
-  });
-
-  test('Tests undefined', () => {
-    expect(() => blot.visualise(undefined)).toThrow('undefined cannot be used as an argument to visualise')
-  });
+beforeAll(() => {
+  blot.setPort(3000).openManually();
+  ws = new WebSocket('ws://localhost:3000');
 });
 
+afterAll(() => {
+  ws.close();
+  setTimeout(() => {}, 300);
+});
 
-describe('Non-string cases', () =>{
-  const message = 'non-string type cannot be used as an arguement to visualise';
-  test('Integer', () => {
-    expect(() => blot.visualise(27)).toThrow(message);
-  });
+describe('Non JSON', () => {
 
-  test('Float', () => {
-    expect(() => blot.visualise(3.1415)).toThrow(message);
-  });
-
-  test('Object', () => {
-    expect(() => blot.visualise({name : "John"})).toThrow(message);
+  test('Tests undefined', () => {
+    expect(() => blot.visualise(undefined)).toThrow('Visualise must take in a valid JSON value')
   });
 
   test('Function', () => {
-    expect(() => blot.visualise(() => "hello world")).toThrow(message);
-  });
-
-  test('Boolean', () => {
-    expect(() => blot.visualise(true)).toThrow(message);
+    expect(() => blot.visualise(() => "hello world")).toThrow('Visualise must take in a valid JSON value');
   });
 });
+
+describe('Standard JSON tests', () => {
+
+  test('Tests empty string', (done) => {
+
+    ws.onmessage = msg => {
+      expect(msg.data).toBe('');
+      done();
+    };
+
+    blot.visualise('');
+  });
+
+  test('Tests null', (done) => {
+
+
+    ws.onmessage = msg => {
+      expect(msg.data).toBe('null');
+      done();
+    };
+
+    blot.visualise(null);
+  });
+
+  test('Integer', (done) => {
+
+    ws.onmessage = msg => {
+      expect(msg.data).toEqual('27');
+      done();
+    };
+
+    blot.visualise(27);
+  });
+
+  test('Float', (done) => {
+
+    ws.onmessage = msg => {
+      expect(msg.data).toBe('3.1415');
+      done();
+    };
+
+    blot.visualise(3.1415);
+  });
+
+  test('Object', (done) => {
+
+    ws.onmessage = msg => {
+      expect(msg.data).toBe(JSON.stringify({
+        name: 'John'
+      }));
+      done();
+    };
+
+    blot.visualise({
+      name: 'John'
+    });
+
+  });
+
+  test('Boolean', (done) => {
+
+    ws.onmessage = msg => {
+      expect(msg.data).toBe('true');
+      done();
+    };
+
+    blot.visualise(true);
+  });
+
+  test('Plain string', (done) => {
+
+    ws.onmessage = msg => {
+      expect(msg.data).toBe('Hello World');
+      ws.close();
+      done();
+    };
+
+    blot.visualise('Hello World');
+
+  });
+
+  test('JSON text', (done) => {
+
+    ws.onmessage = msg => {
+      expect(msg.data).toEqual(jsonText);
+      done();
+    };
+
+    blot.visualise(jsonText);
+  });
+});
+
 
 describe('Falsy port numbers', () => {
 
@@ -71,6 +148,15 @@ describe('Port number cases', () => {
   });
 
   test('Object', () => {
-    expect(() => blot.setPort({name : "John"})).toThrow('Port must be a valid integer');
+    expect(() => blot.setPort({
+      name: "John"
+    })).toThrow('Port must be a valid integer');
   });
 });
+
+
+/*****
+ * SAMPLE DATA
+ ******/
+
+const jsonText = '{ "category": "Programming", "type": "twopart", "setup": "How do you generate a random string?", "delivery": "Put a Windows user in front of Vim and tell him to exit.", "flags": { "nsfw": false, "religious": false, "political": false, "racist": false, "sexist": false }, "id": 129, "error": false }';

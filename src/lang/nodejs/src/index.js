@@ -20,12 +20,16 @@ let connection = null; // refers to the web socket connection to the client once
 let isRunning = false; // track if a browser window is already open
 let port = DEFAULT_PORT;
 
+let openBrowser = true;
+
+exports.visualise = visualise;
+exports.setPort = setPort;
+exports.openManually = openManually;
+
 /**
  * Displays json data in a browser
  * @param {String} jsonStr Stringified JSON data to be viewed
  */
-exports.visualise = visualise;
-
 function visualise(jsonStr) {
 
   // ensure jsonStr is valid
@@ -36,26 +40,37 @@ function visualise(jsonStr) {
     isRunning = true;
 
     startServer(port);
-    setWebsocket((connection) => connection.send(jsonStr));
-  } else if (!connection) {
-    setTimeout(() => visualise(jsonStr, port), 500);
-  } else {
-    connection.send(jsonStr);
+    setWebsocket();
   }
 
-  // FOR TESTING
-  return jsonStr;
+  if (!connection) {
+    setTimeout(() => visualise(jsonStr), 500);
+  } else {
+    connection.send(formatJSON(jsonStr));
+  }
 };
 
 /**
  * Sets the port of the server to a custom user-defined port
  * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
  */
-exports.setPort = function(customPort) {
+function setPort(customPort) {
   validifyPort(customPort);
   port = customPort;
   return {
-    visualise: visualise
+    visualise: visualise,
+    openManually: openManually
+  };
+};
+
+/**
+ * Stops the browser from automatically opening
+ */
+function openManually() {
+  openBrowser = false;
+  return {
+    visualise: visualise,
+    setPort: setPort
   };
 };
 
@@ -91,7 +106,7 @@ function startServer(port) {
       case "/":
         renderFile(res, HTML_FILE_PATH, "text/html");
         break;
-      case JS_FILE_PATH:
+      case "/" + JS_FILE_PATH:
         renderFile(res, JS_FILE_PATH, "text/javascript");
         break;
       default:
@@ -107,7 +122,9 @@ function startServer(port) {
     console.log("Server listening on port " + port);
 
     // show index.html in the browser
-    open(HOST + ":" + port);
+    if (openBrowser) {
+      open(HOST + ":" + port);
+    }
   });
 }
 
@@ -115,60 +132,69 @@ function startServer(port) {
  * Sets up the websocket on the server end. Defines event handlers for web socket connection.
  * @param {*} callback Callback function which is used for sending the first set of data to the client
  */
-function setWebsocket(callback) {
+function setWebsocket() {
   webSocket = new WebSocketServer({
     httpServer: httpServer,
   });
 
-  webSocket.on("request", (request) => {
+  webSocket.on("request", request => {
+
     connection = request.accept(null, request.origin);
 
     connection.on("close", () => console.log("Connection closed"));
-    connection.on("message", (message) => console.log(message));
 
-    callback(connection);
+
+    connection.on("message", (message) => console.log(message));
   });
 }
 
 /**
-* Validates that the argument passed to visualise is a valid JSON string
-* @param {*} jsonStr Argument passed by user to visualise
-*/
+ * Validates that the argument passed to visualise is a valid JSON string
+ * @param {*} jsonStr Argument passed by user to visualise
+ */
 function validifyJSON(jsonStr) {
-  switch (jsonStr) {
-    // FALSY CASES
-    case '':
-      throw 'empty string cannot be used as an argument to visualise'
-      break;
-    case null:
-      throw 'null cannot be used as an argument to visualise'
-      break;
-    case undefined:
-      throw 'undefined cannot be used as an argument to visualise'
-      break;
-  }
-
-  // NON STRING TYPES
-  if (!(jsonStr instanceof String)) {
-    throw 'non-string type cannot be used as an arguement to visualise';
-  }
 
   // CHECK IF STRING IS JSON
   try {
     JSON.parse(jsonStr);
   } catch (e) {
-    throw 'String passed into visualise was not JSON'
+    const type = typeof jsonStr;
+    if (type !== 'object' && type !== 'string') {
+      throw 'Visualise must take in a valid JSON value';
+    }
   }
 }
 
 /**
-* Validates that the port passed to setPort is a valid port number
-* @param {Number} port Port number to be validated
-*/
+ * Validates that the port passed to setPort is a valid port number
+ * @param {Number} port Port number to be validated
+ */
 function validifyPort(port) {
   if (!Number.isInteger(port)) {
     throw "Port must be a valid integer";
   } else if (port <= 0 || port >= 65536) {
     throw "Invalid port number";
   }
+}
+
+/**
+ * Formats the data to be a valid JSON value or text when it gets sent to the Client
+ * @param {*} data Json data to be formatted for sending
+ */
+function formatJSON(data) {
+
+    try {
+      if (data == null) {
+        console.log("hey now brown cow");
+        return 'null';
+      }
+      JSON.parse(data);
+      return data;
+    } catch (e) {
+      if (typeof data === 'object') {
+        return JSON.stringify(data);
+      } else if (typeof data === 'string') {
+        return data;
+      }
+    }
 }

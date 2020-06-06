@@ -7,3 +7,6 @@ node_modules/
 public/
 
 # files
+src/test.js
+src/frontend.js
+src/index.html
