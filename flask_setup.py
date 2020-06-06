@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 import json
-import webbrowser
-from threading import Timer
+import threading, webbrowser,time,socket
 
 
 #check if file is json
@@ -23,10 +22,11 @@ def index():
     return render_template('index.html')
 
 
-def open_browser():
-    webbrowser.open_new('http://127.0.0.1:1235/')
-
-
 if __name__ == "__main__":
-    Timer(1, open_browser).start();
-    app.run(port=1235)
+    port = 5000 + random.randint(0, 999)
+    url = "http://127.0.0.1:{0}".format(port)
+
+    threading.Timer(1.25, lambda: webbrowser.open(url)).start()
+
+    app.run(port=port, debug=False)
+
