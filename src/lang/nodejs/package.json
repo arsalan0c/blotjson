@@ -4,7 +4,7 @@
   "description": "A module to simplify visualisation of JSON.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "repository": {
     "type": "git",

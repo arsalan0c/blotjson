@@ -185,7 +185,6 @@ function formatJSON(data) {
 
     try {
       if (data == null) {
-        console.log("hey now brown cow");
         return 'null';
       }
       JSON.parse(data);
