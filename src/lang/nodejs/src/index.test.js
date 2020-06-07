@@ -9,7 +9,6 @@ beforeAll(() => {
 
 afterAll(() => {
   ws.close();
-  setTimeout(() => {}, 300);
 });
 
 describe('Non JSON', () => {
@@ -79,6 +78,16 @@ describe('Standard JSON tests', () => {
       name: 'John'
     });
 
+  });
+
+  test('Array', (done) => {
+
+    ws.onmessage = msg => {
+      expect(msg.data).toBe('[1,2,3,4]');
+      done();
+    };
+
+    blot.visualise([1,2,3,4]);
   });
 
   test('Boolean', (done) => {

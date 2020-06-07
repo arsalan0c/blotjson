@@ -5,4 +5,5 @@ jobs:
       - image: 'circleci/node:latest'
     steps:
       - checkout
-      - run: echo 'hello world'
+
+      - run: cd src/lang/node_js && npm install && npm test src/index.test.js --forceExit
