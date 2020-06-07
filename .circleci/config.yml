@@ -6,4 +6,4 @@ jobs:
     steps:
       - checkout
 
-      - run: cd src/lang/node_js && npm install && npm test src/index.test.js --forceExit
+      - run: cd src/lang/nodejs && npm install && npm test src/index.test.js --forceExit
