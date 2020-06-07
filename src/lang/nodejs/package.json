@@ -30,8 +30,5 @@
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^26.0.1",
     "prettier": "2.0.5"
-  },
-  "jest": {
-    "testTimeout": 3000
   }
 }
