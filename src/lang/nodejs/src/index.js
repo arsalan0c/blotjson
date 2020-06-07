@@ -8,6 +8,8 @@ const WebSocketServer = require("websocket").server;
 // Frontend file paths
 const HTML_FILE_PATH = "index.html";
 const JS_FILE_PATH = "frontend.js";
+const CSS_FILE_PATH = "styles.css";
+const DARK_THEME_FILE_PATH = "darkTheme.js";
 
 const DEFAULT_PORT = 9101;
 const HOST = "http://127.0.0.1";
@@ -108,6 +110,12 @@ function startServer(port) {
         break;
       case "/" + JS_FILE_PATH:
         renderFile(res, JS_FILE_PATH, "text/javascript");
+        break;
+      case "/" + CSS_FILE_PATH:
+        renderFile(res, CSS_FILE_PATH, "text/css");
+        break;
+      case "/" + DARK_THEME_FILE_PATH:
+        renderFile(res, DARK_THEME_FILE_PATH, "text/javascript");
         break;
       default:
         res.writeHead(404, {
