@@ -17,9 +17,8 @@ const HOST = "http://127.0.0.1";
 /* NETWORKING VARIABLES */
 
 let httpServer = null;
-let webSocket = null;
 let connection = null; // refers to the web socket connection to the client once connection is established
-let isRunning = false; // track if a browser window is already open
+let isRunning = false; // to perform processes only on first call such as server setup
 let port = DEFAULT_PORT;
 
 let openBrowser = true;

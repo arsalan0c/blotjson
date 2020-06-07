@@ -7,6 +7,6 @@ node_modules/
 public/
 
 # files
-src/test.js
+src/userTest.js
 src/frontend.js
 src/index.html

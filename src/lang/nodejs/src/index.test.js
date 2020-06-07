@@ -1,5 +1,6 @@
 const blot = require('./index.js');
 const WebSocket = require('ws');
+const fs = require('fs');
 let ws = null;
 
 beforeAll(() => {
@@ -13,7 +14,7 @@ afterAll(() => {
 
 describe('Non JSON', () => {
 
-  test('Tests undefined', () => {
+  test('undefined', () => {
     expect(() => blot.visualise(undefined)).toThrow('Visualise must take in a valid JSON value')
   });
 
@@ -88,6 +89,26 @@ describe('Standard JSON tests', () => {
     };
 
     blot.visualise([1,2,3,4]);
+  });
+
+  test('Big JSON file', (done) => {
+
+    let data = null;
+
+    fs.readFile('./src/bigTest.json', 'utf8', (err, jsonString) => {
+      if (err) {
+        done.fail(err);
+      } else {
+        data = jsonString;
+        blot.visualise(jsonString);
+      }
+    });
+
+    ws.onmessage = msg => {
+      expect(msg.data).toBe(data);
+      done();
+    };
+
   });
 
   test('Boolean', (done) => {
