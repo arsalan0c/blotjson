@@ -1,18 +1,16 @@
-const http = require("http");
-const open = require("open");
-const fs = require("fs");
-const WebSocketServer = require("websocket").server;
+const http = require('http');
+const open = require('open');
+const fs = require('fs');
+const WebSocketServer = require('websocket').server;
 
 /* CONSTANTS */
 
 // Frontend file paths
-const HTML_FILE_PATH = "index.html";
-const JS_FILE_PATH = "frontend.js";
-const CSS_FILE_PATH = "styles.css";
-const DARK_THEME_FILE_PATH = "darkTheme.js";
+const HTML_FILE_PATH = 'index.html';
+const JS_FILE_PATH = 'frontend.js';
 
 const DEFAULT_PORT = 9101;
-const HOST = "http://127.0.0.1";
+const HOST = 'http://127.0.0.1';
 
 /* NETWORKING VARIABLES */
 
@@ -22,6 +20,7 @@ let isRunning = false; // to perform processes only on first call such as server
 let port = DEFAULT_PORT;
 
 let openBrowser = true;
+const waitingData = [];
 
 exports.visualise = visualise;
 exports.setPort = setPort;
@@ -32,20 +31,20 @@ exports.openManually = openManually;
  * @param {String} jsonStr Stringified JSON data to be viewed
  */
 function visualise(jsonStr) {
-
   // ensure jsonStr is valid
-  validifyJSON(jsonStr)
+  validifyJSON(jsonStr);
 
   // overhead of server creation only done on first call
   if (!isRunning) {
     isRunning = true;
 
+    waitingData.push(jsonStr);
+
     startServer(port);
     setWebsocket();
-  }
-
-  if (!connection) {
-    setTimeout(() => visualise(jsonStr), 500);
+  } else if (!connection) {
+    waitingData.push(jsonStr);
+    // setTimeout(() => visualise(jsonStr), 500);
   } else {
     connection.send(formatJSON(jsonStr));
   }
@@ -84,15 +83,16 @@ function openManually() {
 function renderFile(response, filepath, contentType) {
   fs.readFile(filepath, (err, data) => {
     if (err) {
+      console.log(err);
       response.writeHead(500, {
-        "Content-Type": "text/plain",
+        'Content-Type': 'text/plain'
       });
-      response.end("500 - Internal Server Error");
+      response.end('500 - Internal Server Error');
     } else {
       response.writeHead(200, {
-        "Content-Type": contentType,
+        'Content-Type': contentType
       });
-      response.end(data, "utf-8");
+      response.end(data, 'utf-8');
     }
   });
 }
@@ -104,54 +104,49 @@ function renderFile(response, filepath, contentType) {
 function startServer(port) {
   httpServer = http.createServer((req, res) => {
     switch (req.url) {
-      case "/":
-        renderFile(res, HTML_FILE_PATH, "text/html");
+      case '/':
+        renderFile(res, HTML_FILE_PATH, 'text/html');
         break;
-      case "/" + JS_FILE_PATH:
-        renderFile(res, JS_FILE_PATH, "text/javascript");
-        break;
-      case "/" + CSS_FILE_PATH:
-        renderFile(res, CSS_FILE_PATH, "text/css");
-        break;
-      case "/" + DARK_THEME_FILE_PATH:
-        renderFile(res, DARK_THEME_FILE_PATH, "text/javascript");
+      case '/' + JS_FILE_PATH:
+        renderFile(res, JS_FILE_PATH, 'text/javascript');
         break;
       default:
         res.writeHead(404, {
-          "Content-Type": "text/plain",
+          'Content-Type': 'text/plain'
         });
-        res.end("404 - Page not Found");
+        res.end('404 - Page not Found');
         break;
     }
   });
 
   httpServer.listen(port, (req, res) => {
-    console.log("Server listening on port " + port);
+    console.log('Server listening on port ' + port);
 
     // show index.html in the browser
     if (openBrowser) {
-      open(HOST + ":" + port);
+      open(HOST + ':' + port);
     }
   });
 }
 
 /**
  * Sets up the websocket on the server end. Defines event handlers for web socket connection.
- * @param {*} callback Callback function which is used for sending the first set of data to the client
+ * @param {*} jsonStr json data passed as argument to first visualise call
  */
 function setWebsocket() {
-  webSocket = new WebSocketServer({
-    httpServer: httpServer,
+  const webSocket = new WebSocketServer({
+    httpServer: httpServer
   });
-
-  webSocket.on("request", request => {
-
+  webSocket.on('request', request => {
     connection = request.accept(null, request.origin);
 
-    connection.on("close", () => console.log("Connection closed"));
+    connection.on('close', () => console.log('Connection closed'));
 
+    connection.on('message', (message) => console.log(message));
 
-    connection.on("message", (message) => console.log(message));
+    waitingData.forEach(data => {
+      connection.send(formatJSON(data));
+    });
   });
 }
 
@@ -160,14 +155,13 @@ function setWebsocket() {
  * @param {*} jsonStr Argument passed by user to visualise
  */
 function validifyJSON(jsonStr) {
-
   // CHECK IF STRING IS JSON
   try {
     JSON.parse(jsonStr);
   } catch (e) {
     const type = typeof jsonStr;
     if (type !== 'object' && type !== 'string') {
-      throw 'Visualise must take in a valid JSON value';
+      throw new Error('Visualise must take in a valid JSON value');
     }
   }
 }
@@ -178,9 +172,9 @@ function validifyJSON(jsonStr) {
  */
 function validifyPort(port) {
   if (!Number.isInteger(port)) {
-    throw "Port must be a valid integer";
+    throw new Error('Port must be a valid integer');
   } else if (port <= 0 || port >= 65536) {
-    throw "Invalid port number";
+    throw new Error('Invalid port number');
   }
 }
 
@@ -189,18 +183,17 @@ function validifyPort(port) {
  * @param {*} data Json data to be formatted for sending
  */
 function formatJSON(data) {
-
-    try {
-      if (data == null) {
-        return 'null';
-      }
-      JSON.parse(data);
-      return data;
-    } catch (e) {
-      if (typeof data === 'object') {
-        return JSON.stringify(data);
-      } else if (typeof data === 'string') {
-        return data;
-      }
+  try {
+    if (data == null) {
+      return 'null';
     }
+    JSON.parse(data);
+    return data;
+  } catch (e) {
+    if (typeof data === 'object') {
+      return JSON.stringify(data);
+    } else if (typeof data === 'string') {
+      return data;
+    }
+  }
 }
