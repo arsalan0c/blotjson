@@ -6,5 +6,4 @@ jobs:
     steps:
       - checkout
 
-      - run: cd src/lang/nodejs && npm install && npm test src/index.test.js
-      - run: npx eslint src/index.js
+      - run: cd src/lang/nodejs && npm install && npm test src/index.test.js && npx eslint src/index.js
