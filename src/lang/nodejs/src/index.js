@@ -103,7 +103,7 @@ function renderFile(response, filepath, contentType) {
  */
 function startServer(port) {
   httpServer = http.createServer((req, res) => {
-      switch (req.url) {
+    switch (req.url) {
       case '/':
         renderFile(res, HTML_FILE_PATH, 'text/html');
         break;
