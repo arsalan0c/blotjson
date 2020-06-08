@@ -6,4 +6,4 @@ jobs:
     steps:
       - checkout
 
-      - run: cd src/lang/nodejs && npm install && npx eslint src/index.js && npm test src/index.test.js
+      - run: cd src/lang/nodejs && npm install && npx eslint src/index.js && prettier --check src/index.js && npm test src/index.test.js

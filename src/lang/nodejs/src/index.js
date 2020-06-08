@@ -48,7 +48,7 @@ function visualise(jsonStr) {
   } else {
     connection.send(formatJSON(jsonStr));
   }
-};
+}
 
 /**
  * Sets the port of the server to a custom user-defined port
@@ -61,7 +61,7 @@ function setPort(customPort) {
     visualise: visualise,
     openManually: openManually
   };
-};
+}
 
 /**
  * Stops the browser from automatically opening
@@ -72,7 +72,7 @@ function openManually() {
     visualise: visualise,
     setPort: setPort
   };
-};
+}
 
 /**
  * Renders a file as part of a response to a request
@@ -103,7 +103,7 @@ function renderFile(response, filepath, contentType) {
  */
 function startServer(port) {
   httpServer = http.createServer((req, res) => {
-    switch (req.url) {
+      switch (req.url) {
       case '/':
         renderFile(res, HTML_FILE_PATH, 'text/html');
         break;
@@ -137,14 +137,14 @@ function setWebsocket() {
   const webSocket = new WebSocketServer({
     httpServer: httpServer
   });
-  webSocket.on('request', request => {
+  webSocket.on('request', (request) => {
     connection = request.accept(null, request.origin);
 
     connection.on('close', () => console.log('Connection closed'));
 
     connection.on('message', (message) => console.log(message));
 
-    waitingData.forEach(data => {
+    waitingData.forEach((data) => {
       connection.send(formatJSON(data));
     });
   });
