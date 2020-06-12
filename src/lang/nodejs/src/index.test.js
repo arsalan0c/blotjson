@@ -37,7 +37,6 @@ describe('Standard JSON tests', () => {
 
   test('Tests null', (done) => {
 
-
     ws.onmessage = msg => {
       expect(msg.data).toBe('null');
       done();
