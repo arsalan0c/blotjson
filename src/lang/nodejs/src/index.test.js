@@ -44,13 +44,14 @@ describe('Invalid JSON tests', () => {
 describe('Standard JSON tests', () => {
 
   test('Tests empty string', (done) => {
+    const emptyString = '';
 
     ws.onmessage = msg => {
-      expect(msg.data).toBe('');
+      expect(msg.data).toBe(emptyString);
       done();
     };
 
-    blot.visualise('');
+    blot.visualise(emptyString);
   });
 
   test('Tests null', (done) => {
@@ -110,21 +111,21 @@ describe('Standard JSON tests', () => {
 
   test('Big JSON file', (done) => {
 
-    let data = null;
+    let jsonString = null;
 
-    fs.readFile('./src/bigTest.json', 'utf8', (err, jsonString) => {
+    ws.onmessage = msg => {
+      expect(msg.data).toBe(jsonString);
+      done();
+    };
+
+    fs.readFile('./src/bigTest.json', 'utf8', (err, data) => {
       if (err) {
         done.fail(err);
       } else {
-        data = jsonString;
+        jsonString = data;
         blot.visualise(jsonString);
       }
     });
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe(data);
-      done();
-    };
 
   });
 
@@ -142,7 +143,6 @@ describe('Standard JSON tests', () => {
 
     ws.onmessage = msg => {
       expect(msg.data).toBe('Hello World');
-      ws.close();
       done();
     };
 
@@ -158,6 +158,53 @@ describe('Standard JSON tests', () => {
     };
 
     blot.visualise(jsonText);
+  });
+
+  test('Multiple function calls', (done) => {
+
+    let receivedArray = [];
+
+    ws.onmessage = msg => {
+      receivedArray.push(JSON.parse(msg.data));
+    };
+
+    let testArray = null;
+
+    fs.readFile('./src/testArray.json', 'utf8', (err, data) => {
+      if (err) {
+        done.fail(err);
+      } else {
+        testArray = JSON.parse(data);
+
+        /*
+        send a bunch of data, separated by random time intervals of up to 10ms.
+        use async to wait for the each data to be sent before sending the next
+        */
+        (async () => {
+
+          for (const jsonObj of testArray) {
+            await new Promise(done => setTimeout(done, Math.random() * 10));
+            blot.visualise(JSON.stringify(jsonObj));
+          }
+
+          setTimeout(checkReceivedData, 2000);
+        })();
+      }
+    });
+
+    function checkReceivedData() {
+      if (receivedArray.length !== testArray.length) {
+        setTimeout(() => done.fail(new Error('Data was not properly received by client')), 1000);
+      } else {
+        for (let i = 0; i < testArray.length; i++) {
+          expect(testArray[i]).toEqual(receivedArray[i]);
+        }
+
+        done();
+      }
+    }
+
+
   });
 });
 

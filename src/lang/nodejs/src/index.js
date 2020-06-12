@@ -20,6 +20,9 @@ let isRunning = false; // to perform processes only on first call such as server
 let port = DEFAULT_PORT;
 
 let openBrowser = true;
+
+/* array to store data received before the websocket handshake is established.
+  Once handshake established, the data will get sent */
 const waitingData = [];
 
 exports.visualise = visualise;
@@ -52,6 +55,7 @@ function visualise(jsonStr) {
 /**
  * Sets the port of the server to a custom user-defined port
  * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
+ * @return {Object} Object whose keys point to the other blot functions
  */
 function setPort(customPort) {
   validatePort(customPort);
@@ -64,6 +68,7 @@ function setPort(customPort) {
 
 /**
  * Stops the browser from automatically opening
+ * @return {Object} Object whose keys point to the other blot functions
  */
 function openManually() {
   openBrowser = false;
@@ -152,6 +157,7 @@ function setWebsocket() {
 /**
  * Validates that the argument passed to visualise is a valid JSON string
  * @param {*} jsonStr Argument passed by user to visualise
+ * @throws Throws error if the argument is an invalid JSON value
  */
 function validateJSON(jsonStr) {
   try {
@@ -170,6 +176,7 @@ function validateJSON(jsonStr) {
 /**
  * Validates that the port passed to setPort is a valid port number
  * @param {Number} port Port number to be validated
+ * @throws Throws error if the argument is an invalid port number
  */
 function validatePort(port) {
   if (!Number.isInteger(port)) {
