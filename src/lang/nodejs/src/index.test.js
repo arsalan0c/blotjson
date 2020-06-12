@@ -1,18 +1,18 @@
 const blot = require('./index.js');
-const WebSocket = require('ws');
+const WebSocketClient = require('ws');
 const fs = require('fs');
 let ws = null;
 
 beforeAll(() => {
   blot.setPort(3000).openManually();
-  ws = new WebSocket('ws://localhost:3000');
+  ws = new WebSocketClient('ws://localhost:3000');
 });
 
 afterAll(() => {
   ws.close();
 });
 
-describe('Non JSON', () => {
+describe('Falsy JSON', () => {
 
   test('undefined', () => {
     expect(() => blot.visualise(undefined)).toThrow('Visualise must take in a valid JSON value')
@@ -21,6 +21,24 @@ describe('Non JSON', () => {
   test('Function', () => {
     expect(() => blot.visualise(() => "hello world")).toThrow('Visualise must take in a valid JSON value');
   });
+
+  test('Tests null', () => {
+    expect(() => blot.visualise(null)).toThrow('Visualise must take in a valid JSON value');
+  });
+});
+
+describe('Invalid JSON tests', () => {
+
+  test('Object', () => {
+    expect(() => blot.visualise({
+      name: 'John'
+    })).toThrow('Visualise must take in a valid JSON value');
+  });
+
+  test('Array', () => {
+    expect(() => blot.visualise([1, 2, 3, 4])).toThrow('Visualise must take in a valid JSON value');
+  });
+
 });
 
 describe('Standard JSON tests', () => {
@@ -42,7 +60,7 @@ describe('Standard JSON tests', () => {
       done();
     };
 
-    blot.visualise(null);
+    blot.visualise('null');
   });
 
   test('Integer', (done) => {
@@ -52,7 +70,7 @@ describe('Standard JSON tests', () => {
       done();
     };
 
-    blot.visualise(27);
+    blot.visualise('27');
   });
 
   test('Float', (done) => {
@@ -62,7 +80,7 @@ describe('Standard JSON tests', () => {
       done();
     };
 
-    blot.visualise(3.1415);
+    blot.visualise('3.1415');
   });
 
   test('Object', (done) => {
@@ -74,9 +92,9 @@ describe('Standard JSON tests', () => {
       done();
     };
 
-    blot.visualise({
+    blot.visualise(JSON.stringify({
       name: 'John'
-    });
+    }));
 
   });
 
@@ -87,7 +105,7 @@ describe('Standard JSON tests', () => {
       done();
     };
 
-    blot.visualise([1,2,3,4]);
+    blot.visualise(JSON.stringify([1, 2, 3, 4]));
   });
 
   test('Big JSON file', (done) => {
@@ -117,7 +135,7 @@ describe('Standard JSON tests', () => {
       done();
     };
 
-    blot.visualise(true);
+    blot.visualise('true');
   });
 
   test('Plain string', (done) => {

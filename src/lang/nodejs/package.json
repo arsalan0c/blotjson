@@ -19,10 +19,10 @@
   "homepage": "https://github.com/arsalanc-v2/blotjson#readme",
   "dependencies": {
     "open": "^7.0.4",
-    "websocket": "^1.0.31",
-    "ws": "^7.3.0"
+    "websocket": "^1.0.31"
   },
   "devDependencies": {
+    "ws": "^7.3.0",
     "eslint": "^7.1.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.2",
@@ -35,7 +35,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run build",
+      "pre-commit": "npx prettier --check src/index.js && npx eslint src/index.js"
     }
   }
 }

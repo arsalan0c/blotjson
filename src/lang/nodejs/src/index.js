@@ -32,7 +32,7 @@ exports.openManually = openManually;
  */
 function visualise(jsonStr) {
   // ensure jsonStr is valid
-  validifyJSON(jsonStr);
+  validateJSON(jsonStr);
 
   // overhead of server creation only done on first call
   if (!isRunning) {
@@ -44,9 +44,8 @@ function visualise(jsonStr) {
     setWebsocket();
   } else if (!connection) {
     waitingData.push(jsonStr);
-    // setTimeout(() => visualise(jsonStr), 500);
   } else {
-    connection.send(formatJSON(jsonStr));
+    connection.send(jsonStr);
   }
 }
 
@@ -55,7 +54,7 @@ function visualise(jsonStr) {
  * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
  */
 function setPort(customPort) {
-  validifyPort(customPort);
+  validatePort(customPort);
   port = customPort;
   return {
     visualise: visualise,
@@ -145,7 +144,7 @@ function setWebsocket() {
     connection.on('message', (message) => console.log(message));
 
     waitingData.forEach((data) => {
-      connection.send(formatJSON(data));
+      connection.send(data);
     });
   });
 }
@@ -154,13 +153,15 @@ function setWebsocket() {
  * Validates that the argument passed to visualise is a valid JSON string
  * @param {*} jsonStr Argument passed by user to visualise
  */
-function validifyJSON(jsonStr) {
-  // CHECK IF STRING IS JSON
+function validateJSON(jsonStr) {
   try {
+    if (!jsonStr) {
+      throw new Error();
+    }
     JSON.parse(jsonStr);
   } catch (e) {
     const type = typeof jsonStr;
-    if (type !== 'object' && type !== 'string') {
+    if (type !== 'string') {
       throw new Error('Visualise must take in a valid JSON value');
     }
   }
@@ -170,30 +171,10 @@ function validifyJSON(jsonStr) {
  * Validates that the port passed to setPort is a valid port number
  * @param {Number} port Port number to be validated
  */
-function validifyPort(port) {
+function validatePort(port) {
   if (!Number.isInteger(port)) {
     throw new Error('Port must be a valid integer');
   } else if (port <= 0 || port >= 65536) {
     throw new Error('Invalid port number');
-  }
-}
-
-/**
- * Formats the data to be a valid JSON value or text when it gets sent to the Client
- * @param {*} data Json data to be formatted for sending
- */
-function formatJSON(data) {
-  try {
-    if (data == null) {
-      return 'null';
-    }
-    JSON.parse(data);
-    return data;
-  } catch (e) {
-    if (typeof data === 'object') {
-      return JSON.stringify(data);
-    } else if (typeof data === 'string') {
-      return data;
-    }
   }
 }

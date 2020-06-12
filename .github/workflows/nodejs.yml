@@ -4,10 +4,10 @@ name: Nodejs CI Build
 on:
   push:
     paths:
-      - 'src/lang/nodejs/*'
+      - "src/lang/nodejs/*"
   pull_request:
     paths:
-      - 'src/lang/nodejs/*'
+      - "src/lang/nodejs/*"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -18,8 +18,8 @@ jobs:
         working-directory: ./src/lang/nodejs
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
 
-    - run: npm ci
-    - run: npm run build
+      - run: npm ci
+      - run: npm run build
