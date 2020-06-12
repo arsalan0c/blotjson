@@ -4,7 +4,8 @@
   "description": "A module to simplify visualisation of JSON.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit"
+    "test": "jest --forceExit",
+    "build": "npx prettier --check src/index.js && npx eslint src/index.js && npm test"
   },
   "repository": {
     "type": "git",
@@ -28,7 +29,13 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "husky": "^4.2.5",
     "jest": "^26.0.1",
     "prettier": "2.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build",
+    }
   }
 }
