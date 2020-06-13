@@ -1,4 +1,5 @@
 const blot = require('./index.js');
+const errors = require('./errorMessages.js');
 const WebSocketClient = require('ws');
 const fs = require('fs');
 let ws = null;
@@ -13,40 +14,50 @@ afterAll(() => {
 });
 
 describe('Falsy JSON', () => {
-
   test('undefined', () => {
-    expect(() => blot.visualise(undefined)).toThrow('Visualise must take in a valid JSON value')
+    expect(() => blot.visualise(undefined)).toThrow(errors.invalidJSONError);
   });
 
   test('Function', () => {
-    expect(() => blot.visualise(() => "hello world")).toThrow('Visualise must take in a valid JSON value');
+    expect(() => blot.visualise(() => 'hello world')).toThrow(
+      errors.invalidJSONError
+    );
   });
 
   test('Tests null', () => {
-    expect(() => blot.visualise(null)).toThrow('Visualise must take in a valid JSON value');
+    expect(() => blot.visualise(null)).toThrow(errors.invalidJSONError);
+  });
+
+  test('Empty String', () => {
+    expect(() => blot.visualise('')).toThrow(errors.invalidJSONError);
   });
 });
 
 describe('Invalid JSON tests', () => {
-
   test('Object', () => {
-    expect(() => blot.visualise({
-      name: 'John'
-    })).toThrow('Visualise must take in a valid JSON value');
+    expect(() =>
+      blot.visualise({
+        name: 'John'
+      })
+    ).toThrow(errors.invalidJSONError);
   });
 
   test('Array', () => {
-    expect(() => blot.visualise([1, 2, 3, 4])).toThrow('Visualise must take in a valid JSON value');
+    expect(() => blot.visualise([1, 2, 3, 4])).toThrow(errors.invalidJSONError);
   });
 
+  test('Plain String', () => {
+    expect(() => blot.visualise('hello world')).toThrow(
+      errors.invalidJSONError
+    );
+  });
 });
 
 describe('Standard JSON tests', () => {
+  test('Stringified empty string', (done) => {
+    const emptyString = '""';
 
-  test('Tests empty string', (done) => {
-    const emptyString = '';
-
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       expect(msg.data).toBe(emptyString);
       done();
     };
@@ -54,9 +65,8 @@ describe('Standard JSON tests', () => {
     blot.visualise(emptyString);
   });
 
-  test('Tests null', (done) => {
-
-    ws.onmessage = msg => {
+  test('null', (done) => {
+    ws.onmessage = (msg) => {
       expect(msg.data).toBe('null');
       done();
     };
@@ -65,8 +75,7 @@ describe('Standard JSON tests', () => {
   });
 
   test('Integer', (done) => {
-
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       expect(msg.data).toEqual('27');
       done();
     };
@@ -75,8 +84,7 @@ describe('Standard JSON tests', () => {
   });
 
   test('Float', (done) => {
-
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       expect(msg.data).toBe('3.1415');
       done();
     };
@@ -85,23 +93,24 @@ describe('Standard JSON tests', () => {
   });
 
   test('Object', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe(JSON.stringify({
-        name: 'John'
-      }));
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(
+        JSON.stringify({
+          name: 'John'
+        })
+      );
       done();
     };
 
-    blot.visualise(JSON.stringify({
-      name: 'John'
-    }));
-
+    blot.visualise(
+      JSON.stringify({
+        name: 'John'
+      })
+    );
   });
 
   test('Array', (done) => {
-
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       expect(msg.data).toBe('[1,2,3,4]');
       done();
     };
@@ -110,10 +119,9 @@ describe('Standard JSON tests', () => {
   });
 
   test('Big JSON file', (done) => {
-
     let jsonString = null;
 
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       expect(msg.data).toBe(jsonString);
       done();
     };
@@ -126,12 +134,10 @@ describe('Standard JSON tests', () => {
         blot.visualise(jsonString);
       }
     });
-
   });
 
   test('Boolean', (done) => {
-
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       expect(msg.data).toBe('true');
       done();
     };
@@ -139,20 +145,18 @@ describe('Standard JSON tests', () => {
     blot.visualise('true');
   });
 
-  test('Plain string', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe('Hello World');
+  test('Stringified plain string', (done) => {
+    const test = '"Hello World"';
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(test);
       done();
     };
 
-    blot.visualise('Hello World');
-
+    blot.visualise(test);
   });
 
   test('JSON text', (done) => {
-
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       expect(msg.data).toEqual(jsonText);
       done();
     };
@@ -161,11 +165,11 @@ describe('Standard JSON tests', () => {
   });
 
   test('Multiple function calls', (done) => {
+    const receivedArray1 = []; // recieves all calls immediately
+    const receivedArray2 = []; // receives calls with delay
 
-    let receivedArray = [];
-
-    ws.onmessage = msg => {
-      receivedArray.push(JSON.parse(msg.data));
+    ws.onmessage = (msg) => {
+      receivedArray1.push(JSON.parse(msg.data));
     };
 
     let testArray = null;
@@ -176,81 +180,107 @@ describe('Standard JSON tests', () => {
       } else {
         testArray = JSON.parse(data);
 
+        testArray.forEach((jsonObj) => {
+          blot.visualise(JSON.stringify(jsonObj));
+        });
+
         /*
-        send a bunch of data, separated by random time intervals of up to 10ms.
-        use async to wait for the each data to be sent before sending the next
+        setTimeout is needed so the onmessage callback doesn't change to early
+        otherwise the visualise calls from the previous line will trigger the new
+        onmessage callback below
         */
-        (async () => {
+        setTimeout(
+          /*
+          send a bunch of data, separated by random time intervals of up to 10ms.
+          use async to wait for the each data to be sent before sending the next
+          */
+          async () => {
+            ws.onmessage = (msg) => {
+              receivedArray2.push(JSON.parse(msg.data));
+            };
 
-          for (const jsonObj of testArray) {
-            await new Promise(done => setTimeout(done, Math.random() * 10));
-            blot.visualise(JSON.stringify(jsonObj));
-          }
+            for (const jsonObj of testArray) {
+              // wait a random duration of up to 10ms
+              await new Promise((resolve) =>
+                setTimeout(resolve, Math.random() * 10)
+              );
 
-          setTimeout(checkReceivedData, 2000);
-        })();
+              blot.visualise(JSON.stringify(jsonObj));
+            }
+
+            setTimeout(checkReceivedData, 2000);
+          },
+          1
+        );
       }
     });
 
     function checkReceivedData() {
-      if (receivedArray.length !== testArray.length) {
-        setTimeout(() => done.fail(new Error('Data was not properly received by client')), 1000);
+      if (
+        receivedArray1.length !== testArray.length ||
+        receivedArray2.length !== testArray.length
+      ) {
+        console.log('receivedArray1: ' + receivedArray1.length);
+        console.log('receivedArray2: ' + receivedArray2.length);
+        console.log('testArray: ' + testArray.length);
+        setTimeout(() => {
+          done.fail(new Error(errors.badDataTransmissionError));
+        }, 500);
       } else {
         for (let i = 0; i < testArray.length; i++) {
-          expect(testArray[i]).toEqual(receivedArray[i]);
+          expect(receivedArray1[i]).toEqual(testArray[i]);
+          expect(receivedArray2[i]).toEqual(testArray[i]);
         }
 
         done();
       }
     }
-
-
   });
 });
 
-
 describe('Falsy port numbers', () => {
-
   test('Port undefined', () => {
-    expect(() => blot.setPort(undefined)).toThrow('Port must be a valid integer');
+    expect(() => blot.setPort(undefined)).toThrow(errors.nonIntegerPortError);
   });
 
   test('Port null', () => {
-    expect(() => blot.setPort(null)).toThrow('Port must be a valid integer');
+    expect(() => blot.setPort(null)).toThrow(errors.nonIntegerPortError);
   });
 
   test('NaN', () => {
-    expect(() => blot.setPort(NaN)).toThrow('Port must be a valid integer');
-  })
+    expect(() => blot.setPort(NaN)).toThrow(errors.nonIntegerPortError);
+  });
 });
 
 describe('Port number cases', () => {
   test('Float', () => {
-    expect(() => blot.setPort(1.231)).toThrow('Port must be a valid integer');
+    expect(() => blot.setPort(1.231)).toThrow(errors.nonIntegerPortError);
   });
 
   test('Zero', () => {
-    expect(() => blot.setPort(0)).toThrow('Invalid port number');
+    expect(() => blot.setPort(0)).toThrow(errors.invalidPortNumberError);
   });
 
   test('Negative', () => {
-    expect(() => blot.setPort(-1234)).toThrow('Invalid port number');
+    expect(() => blot.setPort(-1234)).toThrow(errors.invalidPortNumberError);
   });
 
   test('Function', () => {
-    expect(() => blot.setPort(() => {})).toThrow('Port must be a valid integer');
+    expect(() => blot.setPort(() => {})).toThrow(errors.nonIntegerPortError);
   });
 
   test('Object', () => {
-    expect(() => blot.setPort({
-      name: "John"
-    })).toThrow('Port must be a valid integer');
+    expect(() =>
+      blot.setPort({
+        name: 'John'
+      })
+    ).toThrow(errors.nonIntegerPortError);
   });
 });
-
 
 /*****
  * SAMPLE DATA
  ******/
 
-const jsonText = '{ "category": "Programming", "type": "twopart", "setup": "How do you generate a random string?", "delivery": "Put a Windows user in front of Vim and tell him to exit.", "flags": { "nsfw": false, "religious": false, "political": false, "racist": false, "sexist": false }, "id": 129, "error": false }';
+const jsonText =
+  '{ "category": "Programming", "type": "twopart", "setup": "How do you generate a random string?", "delivery": "Put a Windows user in front of Vim and tell him to exit.", "flags": { "nsfw": false, "religious": false, "political": false, "racist": false, "sexist": false }, "id": 129, "error": false }';

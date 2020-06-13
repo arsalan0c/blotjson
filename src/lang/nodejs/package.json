@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --forceExit",
-    "build": "npx prettier --check src/index.js && npx eslint src/index.js && npm test"
+    "build": "npx prettier --check src/*.js && npx eslint src/*.js && npm test"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npx prettier --check src/index.js && npx eslint src/index.js"
+      "pre-commit": "npx prettier --check src/*.js && npx eslint *src/index.js"
     }
   }
 }

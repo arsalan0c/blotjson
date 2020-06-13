@@ -2,6 +2,7 @@ const http = require('http');
 const open = require('open');
 const fs = require('fs');
 const WebSocketServer = require('websocket').server;
+const errors = require('./errorMessages.js');
 
 /* CONSTANTS */
 
@@ -166,10 +167,7 @@ function validateJSON(jsonStr) {
     }
     JSON.parse(jsonStr);
   } catch (e) {
-    const type = typeof jsonStr;
-    if (type !== 'string') {
-      throw new Error('Visualise must take in a valid JSON value');
-    }
+    throw new Error(errors.invalidJSONError);
   }
 }
 
@@ -180,8 +178,8 @@ function validateJSON(jsonStr) {
  */
 function validatePort(port) {
   if (!Number.isInteger(port)) {
-    throw new Error('Port must be a valid integer');
+    throw new Error(errors.nonIntegerPortError);
   } else if (port <= 0 || port >= 65536) {
-    throw new Error('Invalid port number');
+    throw new Error(errors.invalidPortNumberError);
   }
 }
