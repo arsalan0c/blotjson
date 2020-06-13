@@ -220,12 +220,7 @@ describe('Standard JSON tests', () => {
         receivedArray1.length !== testArray.length ||
         receivedArray2.length !== testArray.length
       ) {
-        console.log('receivedArray1: ' + receivedArray1.length);
-        console.log('receivedArray2: ' + receivedArray2.length);
-        console.log('testArray: ' + testArray.length);
-        setTimeout(() => {
           done.fail(new Error(errors.badDataTransmissionError));
-        }, 500);
       } else {
         for (let i = 0; i < testArray.length; i++) {
           expect(receivedArray1[i]).toEqual(testArray[i]);
