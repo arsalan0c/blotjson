@@ -199,8 +199,8 @@ describe('Standard JSON tests', () => {
 
     (async () => {
       for (let i = 0; i < numData; i++) {
-        await new Promise((resolve) => setTimeout(resolve, Math.random() * 20)); // wait for a random duration up to 20ms
         blot.visualise(JSON.stringify(i));
+        await delay(Math.random() * 20);
       }
     })();
   });
@@ -249,8 +249,12 @@ describe('Port number cases', () => {
 });
 
 /*****
- * SAMPLE DATA
+ * AUXILLIARY CONSTANTS AND FUNCTIONS
  ******/
 
 const jsonText =
   '{ "category": "Programming", "type": "twopart", "setup": "How do you generate a random string?", "delivery": "Put a Windows user in front of Vim and tell him to exit.", "flags": { "nsfw": false, "religious": false, "political": false, "racist": false, "sexist": false }, "id": 129, "error": false }';
+
+async function delay(duration) {
+  await new Promise((resolve) => setTimeout(resolve, duration));
+}
