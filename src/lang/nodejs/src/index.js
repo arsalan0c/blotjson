@@ -167,7 +167,7 @@ function validateJSON(jsonStr) {
     }
     JSON.parse(jsonStr);
   } catch (e) {
-    throw new Error(errors.invalidJSONError);
+    throw new Error(errors.INVALID_JSON_ERROR);
   }
 }
 
@@ -178,8 +178,8 @@ function validateJSON(jsonStr) {
  */
 function validatePort(port) {
   if (!Number.isInteger(port)) {
-    throw new Error(errors.nonIntegerPortError);
+    throw new Error(errors.NON_INTEGER_PORT_ERROR);
   } else if (port <= 0 || port >= 65536) {
-    throw new Error(errors.invalidPortNumberError);
+    throw new Error(errors.INVALID_PORT_NUMBER_ERROR);
   }
 }

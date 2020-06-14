@@ -15,21 +15,21 @@ afterAll(() => {
 
 describe('Falsy JSON', () => {
   test('undefined', () => {
-    expect(() => blot.visualise(undefined)).toThrow(errors.invalidJSONError);
+    expect(() => blot.visualise(undefined)).toThrow(errors.INVALID_JSON_ERROR);
   });
 
   test('Function', () => {
     expect(() => blot.visualise(() => 'hello world')).toThrow(
-      errors.invalidJSONError
+      errors.INVALID_JSON_ERROR
     );
   });
 
   test('Tests null', () => {
-    expect(() => blot.visualise(null)).toThrow(errors.invalidJSONError);
+    expect(() => blot.visualise(null)).toThrow(errors.INVALID_JSON_ERROR);
   });
 
   test('Empty String', () => {
-    expect(() => blot.visualise('')).toThrow(errors.invalidJSONError);
+    expect(() => blot.visualise('')).toThrow(errors.INVALID_JSON_ERROR);
   });
 });
 
@@ -39,30 +39,30 @@ describe('Invalid JSON tests', () => {
       blot.visualise({
         name: 'John'
       })
-    ).toThrow(errors.invalidJSONError);
+    ).toThrow(errors.INVALID_JSON_ERROR);
   });
 
   test('Array', () => {
-    expect(() => blot.visualise([1, 2, 3, 4])).toThrow(errors.invalidJSONError);
+    expect(() => blot.visualise([1, 2, 3, 4])).toThrow(errors.INVALID_JSON_ERROR);
   });
 
   test('Plain String', () => {
     expect(() => blot.visualise('hello world')).toThrow(
-      errors.invalidJSONError
+      errors.INVALID_JSON_ERROR
     );
   });
 });
 
 describe('Standard JSON tests', () => {
   test('Stringified empty string', (done) => {
-    const emptyString = '""';
+    const testData = '""';
 
     ws.onmessage = (msg) => {
-      expect(msg.data).toBe(emptyString);
+      expect(msg.data).toBe(testData);
       done();
     };
 
-    blot.visualise(emptyString);
+    blot.visualise(testData);
   });
 
   test('null', (done) => {
@@ -164,104 +164,77 @@ describe('Standard JSON tests', () => {
     blot.visualise(jsonText);
   });
 
-  test('Multiple function calls', (done) => {
-    const receivedArray1 = []; // recieves all calls immediately
-    const receivedArray2 = []; // receives calls with delay
+  test('Multiple function calls immediate', (done) => {
+    const numData = 1000;
+    let currentData = 0;
 
     ws.onmessage = (msg) => {
-      receivedArray1.push(JSON.parse(msg.data));
-    };
+      expect(msg.data).toBe(JSON.stringify(currentData));
+      currentData++;
 
-    let testArray = null;
-
-    fs.readFile('./src/testArray.json', 'utf8', (err, data) => {
-      if (err) {
-        done.fail(err);
-      } else {
-        testArray = JSON.parse(data);
-
-        testArray.forEach((jsonObj) => {
-          blot.visualise(JSON.stringify(jsonObj));
-        });
-
-        /*
-        setTimeout is needed so the onmessage callback doesn't change to early
-        otherwise the visualise calls from the previous line will trigger the new
-        onmessage callback below
-        */
-        setTimeout(
-          /*
-          send a bunch of data, separated by random time intervals of up to 10ms.
-          use async to wait for the each data to be sent before sending the next
-          */
-          async () => {
-            ws.onmessage = (msg) => {
-              receivedArray2.push(JSON.parse(msg.data));
-            };
-
-            for (const jsonObj of testArray) {
-              // wait a random duration of up to 10ms
-              await new Promise((resolve) =>
-                setTimeout(resolve, Math.random() * 10)
-              );
-
-              blot.visualise(JSON.stringify(jsonObj));
-            }
-
-            setTimeout(checkReceivedData, 2000);
-          },
-          1
-        );
-      }
-    });
-
-    function checkReceivedData() {
-      if (
-        receivedArray1.length !== testArray.length ||
-        receivedArray2.length !== testArray.length
-      ) {
-        done.fail(new Error(errors.badDataTransmissionError));
-      } else {
-        for (let i = 0; i < testArray.length; i++) {
-          expect(receivedArray1[i]).toEqual(testArray[i]);
-          expect(receivedArray2[i]).toEqual(testArray[i]);
-        }
-
+      if (currentData === numData) {
         done();
       }
+    };
+
+    for (let i = 0; i < numData; i++) {
+      blot.visualise(JSON.stringify(i));
     }
+
+  });
+
+  test('Multiple function calls delayed', (done) => {
+    const numData = 100;
+    let currentData = 0;
+
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(JSON.stringify(currentData));
+      currentData++;
+
+      if (currentData === numData) {
+        done();
+      }
+    };
+
+    (async () => {
+      for (let i = 0; i < numData; i++) {
+        await new Promise(resolve => setTimeout(resolve, Math.random() * 20)); // wait for a random duration up to 20ms
+        blot.visualise(JSON.stringify(i));
+      }
+    })();
+
   });
 });
 
 describe('Falsy port numbers', () => {
   test('Port undefined', () => {
-    expect(() => blot.setPort(undefined)).toThrow(errors.nonIntegerPortError);
+    expect(() => blot.setPort(undefined)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 
   test('Port null', () => {
-    expect(() => blot.setPort(null)).toThrow(errors.nonIntegerPortError);
+    expect(() => blot.setPort(null)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 
   test('NaN', () => {
-    expect(() => blot.setPort(NaN)).toThrow(errors.nonIntegerPortError);
+    expect(() => blot.setPort(NaN)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 });
 
 describe('Port number cases', () => {
   test('Float', () => {
-    expect(() => blot.setPort(1.231)).toThrow(errors.nonIntegerPortError);
+    expect(() => blot.setPort(1.231)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 
   test('Zero', () => {
-    expect(() => blot.setPort(0)).toThrow(errors.invalidPortNumberError);
+    expect(() => blot.setPort(0)).toThrow(errors.INVALID_PORT_NUMBER_ERROR);
   });
 
   test('Negative', () => {
-    expect(() => blot.setPort(-1234)).toThrow(errors.invalidPortNumberError);
+    expect(() => blot.setPort(-1234)).toThrow(errors.INVALID_PORT_NUMBER_ERROR);
   });
 
   test('Function', () => {
-    expect(() => blot.setPort(() => {})).toThrow(errors.nonIntegerPortError);
+    expect(() => blot.setPort(() => {})).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 
   test('Object', () => {
@@ -269,7 +242,7 @@ describe('Port number cases', () => {
       blot.setPort({
         name: 'John'
       })
-    ).toThrow(errors.nonIntegerPortError);
+    ).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 });
 
