@@ -1,192 +1,274 @@
 const blot = require('./index.js');
-const WebSocket = require('ws');
+const errors = require('./errorMessages.js');
+const WebSocketClient = require('ws');
 const fs = require('fs');
 let ws = null;
 
 beforeAll(() => {
   blot.setPort(3000).openManually();
-  ws = new WebSocket('ws://localhost:3000');
+  ws = new WebSocketClient('ws://localhost:3000');
 });
 
 afterAll(() => {
   ws.close();
 });
 
-describe('Non JSON', () => {
-
+describe('Falsy JSON', () => {
   test('undefined', () => {
-    expect(() => blot.visualise(undefined)).toThrow('Visualise must take in a valid JSON value')
+    const testData = undefined;
+    expect(() => blot.visualise(testData)).toThrow(errors.INVALID_JSON_ERROR);
   });
 
   test('Function', () => {
-    expect(() => blot.visualise(() => "hello world")).toThrow('Visualise must take in a valid JSON value');
+    const testData = () => 'hello world';
+    expect(() => blot.visualise(testData)).toThrow(errors.INVALID_JSON_ERROR);
+  });
+
+  test('null', () => {
+    const testData = null;
+    expect(() => blot.visualise(testData)).toThrow(errors.INVALID_JSON_ERROR);
+  });
+
+  test('Empty String', () => {
+    const testData = '';
+    expect(() => blot.visualise(testData)).toThrow(errors.INVALID_JSON_ERROR);
+  });
+
+  test('NaN', () => {
+    const testData = NaN;
+    expect(() => blot.visualise(testData)).toThrow(errors.INVALID_JSON_ERROR);
+  });
+});
+
+describe('Invalid JSON tests', () => {
+  test('Object', () => {
+    const testData = {
+      name: 'John'
+    };
+    expect(() => blot.visualise(testData)).toThrow(errors.INVALID_JSON_ERROR);
+  });
+
+  test('Array', () => {
+    const testData = [1, 2, 3, 4];
+    expect(() => blot.visualise(testData)).toThrow(errors.INVALID_JSON_ERROR);
+  });
+
+  test('Plain String', () => {
+    const testData = 'hello world';
+    expect(() => blot.visualise(testData)).toThrow(errors.INVALID_JSON_ERROR);
   });
 });
 
 describe('Standard JSON tests', () => {
+  test('Stringified empty string', (done) => {
+    const testData = '""';
 
-  test('Tests empty string', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe('');
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(testData);
       done();
     };
 
-    blot.visualise('');
+    blot.visualise(testData);
   });
 
-  test('Tests null', (done) => {
-
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe('null');
+  test('null', (done) => {
+    const testData = 'null';
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(testData);
       done();
     };
 
-    blot.visualise(null);
+    blot.visualise(testData);
   });
 
   test('Integer', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toEqual('27');
+    const testData = '27';
+    ws.onmessage = (msg) => {
+      expect(msg.data).toEqual(testData);
       done();
     };
 
-    blot.visualise(27);
+    blot.visualise(testData);
   });
 
   test('Float', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe('3.1415');
+    const testData = '3.1415';
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(testData);
       done();
     };
 
-    blot.visualise(3.1415);
+    blot.visualise(testData);
   });
 
   test('Object', (done) => {
+    const testData = {
+      name: 'John'
+    };
 
-    ws.onmessage = msg => {
-      expect(msg.data).toBe(JSON.stringify({
-        name: 'John'
-      }));
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(JSON.stringify(testData));
       done();
     };
 
-    blot.visualise({
-      name: 'John'
-    });
-
+    blot.visualise(JSON.stringify(testData));
   });
 
   test('Array', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe('[1,2,3,4]');
+    const testData = '[1,2,3,4]';
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(testData);
       done();
     };
 
-    blot.visualise([1,2,3,4]);
+    blot.visualise(testData);
   });
 
   test('Big JSON file', (done) => {
+    let testData = null;
 
-    let data = null;
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(testData);
+      done();
+    };
 
-    fs.readFile('./src/bigTest.json', 'utf8', (err, jsonString) => {
+    fs.readFile('./src/bigTest.json', 'utf8', (err, data) => {
       if (err) {
         done.fail(err);
       } else {
-        data = jsonString;
-        blot.visualise(jsonString);
+        testData = data;
+        blot.visualise(testData);
       }
     });
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe(data);
-      done();
-    };
-
   });
 
   test('Boolean', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe('true');
+    const testData = 'true';
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(testData);
       done();
     };
 
-    blot.visualise(true);
+    blot.visualise(testData);
   });
 
-  test('Plain string', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toBe('Hello World');
-      ws.close();
+  test('Stringified plain string', (done) => {
+    const testData = '"Hello World"';
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(testData);
       done();
     };
 
-    blot.visualise('Hello World');
-
+    blot.visualise(testData);
   });
 
   test('JSON text', (done) => {
-
-    ws.onmessage = msg => {
-      expect(msg.data).toEqual(jsonText);
+    const testData = jsonText;
+    ws.onmessage = (msg) => {
+      expect(msg.data).toEqual(testData);
       done();
     };
 
-    blot.visualise(jsonText);
+    blot.visualise(testData);
+  });
+
+  test('Multiple function calls immediate', (done) => {
+    const numData = 1000;
+    let currentData = 0;
+
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(JSON.stringify(currentData));
+      currentData++;
+
+      if (currentData === numData) {
+        done();
+      }
+    };
+
+    for (let i = 0; i < numData; i++) {
+      blot.visualise(JSON.stringify(i));
+    }
+  });
+
+  test('Multiple function calls delayed', (done) => {
+    const numData = 100;
+    let currentData = 0;
+
+    ws.onmessage = (msg) => {
+      expect(msg.data).toBe(JSON.stringify(currentData));
+      currentData++;
+
+      if (currentData === numData) {
+        done();
+      }
+    };
+
+    (async () => {
+      for (let i = 0; i < numData; i++) {
+        blot.visualise(JSON.stringify(i));
+        await delay(Math.random() * 20);
+      }
+    })();
   });
 });
 
-
 describe('Falsy port numbers', () => {
-
   test('Port undefined', () => {
-    expect(() => blot.setPort(undefined)).toThrow('Port must be a valid integer');
+    const testPort = undefined;
+    expect(() => blot.setPort(testPort)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 
   test('Port null', () => {
-    expect(() => blot.setPort(null)).toThrow('Port must be a valid integer');
+    const testPort = null;
+    expect(() => blot.setPort(testPort)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 
   test('NaN', () => {
-    expect(() => blot.setPort(NaN)).toThrow('Port must be a valid integer');
-  })
+    const testPort = NaN;
+    expect(() => blot.setPort(testPort)).toThrow(errors.NON_INTEGER_PORT_ERROR);
+  });
 });
 
 describe('Port number cases', () => {
   test('Float', () => {
-    expect(() => blot.setPort(1.231)).toThrow('Port must be a valid integer');
+    const testPort = 1.231;
+    expect(() => blot.setPort(testPort)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 
   test('Zero', () => {
-    expect(() => blot.setPort(0)).toThrow('Invalid port number');
+    const testPort = 0;
+    expect(() => blot.setPort(testPort)).toThrow(
+      errors.INVALID_PORT_NUMBER_ERROR
+    );
   });
 
   test('Negative', () => {
-    expect(() => blot.setPort(-1234)).toThrow('Invalid port number');
+    const testPort = -1234;
+    expect(() => blot.setPort(testPort)).toThrow(
+      errors.INVALID_PORT_NUMBER_ERROR
+    );
   });
 
   test('Function', () => {
-    expect(() => blot.setPort(() => {})).toThrow('Port must be a valid integer');
+    const testPort = () => {};
+    expect(() => blot.setPort(testPort)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 
   test('Object', () => {
-    expect(() => blot.setPort({
-      name: "John"
-    })).toThrow('Port must be a valid integer');
+    const testPort = {
+      name: 'John'
+    };
+    expect(() => blot.setPort(testPort)).toThrow(errors.NON_INTEGER_PORT_ERROR);
   });
 });
 
-
 /*****
- * SAMPLE DATA
+ * AUXILLIARY CONSTANTS AND FUNCTIONS
  ******/
 
-const jsonText = '{ "category": "Programming", "type": "twopart", "setup": "How do you generate a random string?", "delivery": "Put a Windows user in front of Vim and tell him to exit.", "flags": { "nsfw": false, "religious": false, "political": false, "racist": false, "sexist": false }, "id": 129, "error": false }';
+const jsonText =
+  '{ "category": "Programming", "type": "twopart", "setup": "How do you generate a random string?", "delivery": "Put a Windows user in front of Vim and tell him to exit.", "flags": { "nsfw": false, "religious": false, "political": false, "racist": false, "sexist": false }, "id": 129, "error": false }';
+
+async function delay(duration) {
+  await new Promise((resolve) => setTimeout(resolve, duration));
+}

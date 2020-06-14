@@ -2,6 +2,7 @@ const http = require('http');
 const open = require('open');
 const fs = require('fs');
 const WebSocketServer = require('websocket').server;
+const errors = require('./errorMessages.js');
 
 /* CONSTANTS */
 
@@ -20,6 +21,9 @@ let isRunning = false; // to perform processes only on first call such as server
 let port = DEFAULT_PORT;
 
 let openBrowser = true;
+
+/* array to store data received before the websocket handshake is established.
+  Once handshake established, the data will get sent */
 const waitingData = [];
 
 exports.visualise = visualise;
@@ -32,7 +36,7 @@ exports.openManually = openManually;
  */
 function visualise(jsonStr) {
   // ensure jsonStr is valid
-  validifyJSON(jsonStr);
+  validateJSON(jsonStr);
 
   // overhead of server creation only done on first call
   if (!isRunning) {
@@ -44,18 +48,18 @@ function visualise(jsonStr) {
     setWebsocket();
   } else if (!connection) {
     waitingData.push(jsonStr);
-    // setTimeout(() => visualise(jsonStr), 500);
   } else {
-    connection.send(formatJSON(jsonStr));
+    connection.send(jsonStr);
   }
 }
 
 /**
  * Sets the port of the server to a custom user-defined port
  * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
+ * @return {Object} Object whose keys point to the other blot functions
  */
 function setPort(customPort) {
-  validifyPort(customPort);
+  validatePort(customPort);
   port = customPort;
   return {
     visualise: visualise,
@@ -65,6 +69,7 @@ function setPort(customPort) {
 
 /**
  * Stops the browser from automatically opening
+ * @return {Object} Object whose keys point to the other blot functions
  */
 function openManually() {
   openBrowser = false;
@@ -145,7 +150,7 @@ function setWebsocket() {
     connection.on('message', (message) => console.log(message));
 
     waitingData.forEach((data) => {
-      connection.send(formatJSON(data));
+      connection.send(data);
     });
   });
 }
@@ -153,47 +158,28 @@ function setWebsocket() {
 /**
  * Validates that the argument passed to visualise is a valid JSON string
  * @param {*} jsonStr Argument passed by user to visualise
+ * @throws Throws error if the argument is an invalid JSON value
  */
-function validifyJSON(jsonStr) {
-  // CHECK IF STRING IS JSON
+function validateJSON(jsonStr) {
   try {
+    if (!jsonStr) {
+      throw new Error();
+    }
     JSON.parse(jsonStr);
   } catch (e) {
-    const type = typeof jsonStr;
-    if (type !== 'object' && type !== 'string') {
-      throw new Error('Visualise must take in a valid JSON value');
-    }
+    throw new Error(errors.INVALID_JSON_ERROR);
   }
 }
 
 /**
  * Validates that the port passed to setPort is a valid port number
  * @param {Number} port Port number to be validated
+ * @throws Throws error if the argument is an invalid port number
  */
-function validifyPort(port) {
+function validatePort(port) {
   if (!Number.isInteger(port)) {
-    throw new Error('Port must be a valid integer');
+    throw new Error(errors.NON_INTEGER_PORT_ERROR);
   } else if (port <= 0 || port >= 65536) {
-    throw new Error('Invalid port number');
-  }
-}
-
-/**
- * Formats the data to be a valid JSON value or text when it gets sent to the Client
- * @param {*} data Json data to be formatted for sending
- */
-function formatJSON(data) {
-  try {
-    if (data == null) {
-      return 'null';
-    }
-    JSON.parse(data);
-    return data;
-  } catch (e) {
-    if (typeof data === 'object') {
-      return JSON.stringify(data);
-    } else if (typeof data === 'string') {
-      return data;
-    }
+    throw new Error(errors.INVALID_PORT_NUMBER_ERROR);
   }
 }
