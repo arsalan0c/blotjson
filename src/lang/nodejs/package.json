@@ -35,7 +35,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npx prettier --write src/*.js && npx eslint *src/index.js"
+      "pre-commit": "npx prettier --check src/*.js && npx eslint *src/index.js"
     }
   }
 }

@@ -43,7 +43,9 @@ describe('Invalid JSON tests', () => {
   });
 
   test('Array', () => {
-    expect(() => blot.visualise([1, 2, 3, 4])).toThrow(errors.INVALID_JSON_ERROR);
+    expect(() => blot.visualise([1, 2, 3, 4])).toThrow(
+      errors.INVALID_JSON_ERROR
+    );
   });
 
   test('Plain String', () => {
@@ -180,7 +182,6 @@ describe('Standard JSON tests', () => {
     for (let i = 0; i < numData; i++) {
       blot.visualise(JSON.stringify(i));
     }
-
   });
 
   test('Multiple function calls delayed', (done) => {
@@ -198,17 +199,18 @@ describe('Standard JSON tests', () => {
 
     (async () => {
       for (let i = 0; i < numData; i++) {
-        await new Promise(resolve => setTimeout(resolve, Math.random() * 20)); // wait for a random duration up to 20ms
+        await new Promise((resolve) => setTimeout(resolve, Math.random() * 20)); // wait for a random duration up to 20ms
         blot.visualise(JSON.stringify(i));
       }
     })();
-
   });
 });
 
 describe('Falsy port numbers', () => {
   test('Port undefined', () => {
-    expect(() => blot.setPort(undefined)).toThrow(errors.NON_INTEGER_PORT_ERROR);
+    expect(() => blot.setPort(undefined)).toThrow(
+      errors.NON_INTEGER_PORT_ERROR
+    );
   });
 
   test('Port null', () => {
