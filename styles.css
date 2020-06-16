@@ -1,21 +1,45 @@
+.header-main{
+    position: fixed;
+}
 .main-logo {
     width: 5rem;
 }
 
 .logo-title {
+    position: fixed;
     text-align: center;
     font-size: 1.4rem;
     font-family: 'Ubuntu', sans-serif;
     font-weight: 500;
+    left: 45%;
 
 }
+@media (max-width: 800px){
+    .header-main #top-hr {
+        display: none;
+    }
+    .logo-title {
+        position: fixed;
+        text-align: center;
+        font-size: 1.4rem;
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: 500;
+        left: 37%;
+    
+    }
 
+}
 
 body {
     margin-top: 2rem;
     background-color: #ffe9c5;
 }
 
+footer{
+    position: fixed;
+    bottom: 1%;
+    text-align: center;
+}
 .switch {
     position: relative;
     display: inline-block;
@@ -81,38 +105,60 @@ input:checked+.slider:before {
     position: fixed;
 }
 
-.search-bar {
+.search {
+    display: inline;
     position: fixed;
     right: 5%;
     padding-top: 5px;
 }
 
-.search-bar button {
-    position: fixed;
-    right: 2%;
-    top: 4.7%;
-}
 
 #top-hr {
     width: 100%;
-    /*position: fixed;*/
-    background-color: #00005c;
     left: 0px;
+    height: 2px;
+    position: fixed;
+    top: 30%;
+    background-color: white;
 }
 
 .darktheme {
     background-color: #27496d;
     color: white;
-
 }
 
-.input-area {
+
+#input-area {
     position: fixed;
+    top: 32%;
     overflow-y: scroll;
     max-height: 70%;
-    min-width: 99%;
-    left: 10px;
-    top: 30%;
+    min-width: 99.5%;
+    /* left: 10px; */
     font-family: 'Roboto', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1rem;
+}
+
+.individual-data{
+    color: #FF4500;
+    display: inline-block
+}
+
+.data-inside{
+    color: rgb(17, 161, 17);
+    margin-left: 4em;
+}
+
+.text-collapse-btn{
+        background-color: Transparent;
+        background-repeat:no-repeat;
+        border: none;
+        cursor:pointer;
+        overflow: hidden;
+        outline:none;
+        float: left;
+}
+.collapse{
+    /* display: none; */
+    background-color: blue;
 }
