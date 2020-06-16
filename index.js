@@ -124,6 +124,7 @@ function startServer(port) {
         renderFile(res, DARK_THEME_FILE_PATH, "text/javascript");
         break;
       default:
+        console.log(req.url);
         res.writeHead(404, {
           "Content-Type": "text/plain",
         });
