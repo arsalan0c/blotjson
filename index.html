@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,500;0,700;1,500&display=swap"rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,500;0,700;1,500&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/svg+xml" href="Frame_1.svg">
@@ -15,32 +16,36 @@
 
 <body>
     <div class="header-main">
-        <span class ="theme-slider">
+        <span class="theme-slider">
             <label class="switch">
                 <input type="checkbox">
                 <span class="slider round"></span>
             </label>
         </span>
-        <span class="search-bar">
-            <form action="">
-                <label>Search</label>
-                <input type="search">
-            </form>
-            <button>go!</button>
-        </span>
+        <div class="search">
+            <span>
+                <form action="">
+                    <label>Search</label>
+                    <input type="search" placeholder="press enter to search...">
+                </form>
+            </span>
+
+        </div>
         <div class="logo-title">
             <img class="main-logo" src="Frame_1.svg" alt="blot logo">
             <h3><em>visualizing data</em></h3>
         </div>
+        <hr id="top-hr">
     </div>
-    <hr id="top-hr">
     <div id="input-area">
-    
+    <!-- all json files are added here -->
     </div>
 
-<script src="frontend.js"></script>
-<script src="darkTheme.js"></script>
-<script src="index.js"></script>
+    <script src="frontend.js"></script>
+    <script src="darkTheme.js"></script>
 </body>
-
+<!-- <footer>
+    a product by Arsalan Cheema, Saad Siddiqui , Umer Siddiqui & Usman Siddiqui
+    add github link eventually
+</footer> -->
 </html>
