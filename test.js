@@ -52,5 +52,5 @@ var testData3 = {
     }
 
 blot.visualise(testData);
-//blot.visualise(testData2);
-//blot.visualise(testData3);
+blot.visualise(testData2);
+blot.visualise(testData3);
