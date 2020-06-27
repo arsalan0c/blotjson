@@ -137,6 +137,7 @@ input:checked+.slider:before {
     /* left: 10px; */
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
+    bottom: 3%;
 }
 
 .individual-data{
@@ -159,6 +160,11 @@ input:checked+.slider:before {
         float: left;
 }
 .collapse{
-    /* display: none; */
-    background-color: blue;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 10px; 
+}
+.btn-after{
+    background-color: #2196F3;
 }

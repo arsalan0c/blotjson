@@ -21,11 +21,11 @@ function jsonConversion(jsonData) {
 
     for (item in jsonData) {
         input += "<button class= 'text-collapse-btn'>&#9660</button>"
-        input += "<div class= 'individual-data' 'collapse'>" + item + ":" + "</div>";
+        input += "<div class= 'individual-data'>" + "{ " + item + ":" + "</div>";
         if (typeof (jsonData[item]) === "object") {
-            input += "<br>" + jsonConversion(jsonData[item]);
+            input += "<br>" + "<div class = data-inside>" + jsonConversion(jsonData[item]) + "</div>";
         } else {
-            input += "<div class= 'data-inside'>" + jsonData[item] + "</div>";
+            input += "<div class= 'data-inside'>" + jsonData[item] + " }" + "</div>";
         }
     }
     return input;
@@ -34,15 +34,19 @@ function buttonCollapse() {
     let collapsers = document.getElementsByClassName("text-collapse-btn");
     //console.log(collapsers.length);
     var collapsableData = document.querySelectorAll(".individual-data");
-    console.log(Array.from(collapsableData));
-    console.log(collapsableData);
+    var internalCollapsableData = document.querySelectorAll(".data-inside");
+    //console.log(Array.from(collapsableData));
+    //console.log(collapsableData);
     for (let i = 0; i < collapsers.length; i++) {
         console.log("test");
         collapsers[i].addEventListener("click", function () {
             console.log("clicked");
+            collapsers[i].classList.toggle("btn-after");
             //add collapse for this click to all text below
             for (let j = i; j < collapsableData.length; j++) {
                 collapsableData[j].classList.toggle("collapse");
+                //length of internaldata nodelist may be longer....
+                internalCollapsableData[j].classList.toggle("collapse");
             }
         });
         //reduce size of array for every iteration as we go down the column of buttons
