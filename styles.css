@@ -1,8 +1,55 @@
-.header-main{
-    position: fixed;
+body {
+    margin-top: 2rem;
+    background-color: #ffe9c5;
 }
+
+footer {
+    position: fixed;
+    bottom: 1%;
+    text-align: center;
+}
+
+#header-main {
+    position: fixed;
+    display: inline-block;
+}
+
+#top-hr {
+    width: 100%;
+    left: 0px;
+    height: 2px;
+    position: fixed;
+    top: 30%;
+    background-color: white;
+
+}
+
+#input-area {
+    position: fixed;
+    top: 32%;
+    overflow-y: scroll;
+    max-height: 70%;
+    min-width: 99.5%;
+    /* left: 10px; */
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    bottom: 3%;
+}
+
+.darktheme {
+    background-color: #27496d;
+    color: white;
+}
+
 .main-logo {
     width: 5rem;
+}
+
+.search {
+    display: inline-block;
+    position: fixed;
+    right: 5%;
+    padding-top: 5px;
 }
 
 .logo-title {
@@ -14,32 +61,19 @@
     left: 45%;
 
 }
-@media (max-width: 800px){
-    .header-main #top-hr {
-        display: none;
-    }
-    .logo-title {
-        position: fixed;
-        text-align: center;
-        font-size: 1.4rem;
-        font-family: 'Ubuntu', sans-serif;
-        font-weight: 500;
-        left: 37%;
-    
-    }
 
-}
-
-body {
-    margin-top: 2rem;
-    background-color: #ffe9c5;
-}
-
-footer{
+#input-area {
     position: fixed;
-    bottom: 1%;
-    text-align: center;
+    top: 32%;
+    overflow-y: scroll;
+    max-height: 70%;
+    min-width: 99.5%;
+    /* left: 10px; */
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    bottom: 3%;
 }
+
 .switch {
     position: relative;
     display: inline-block;
@@ -53,6 +87,7 @@ footer{
     height: 0;
 }
 
+/* styling for slider */
 .slider {
     position: absolute;
     cursor: pointer;
@@ -105,66 +140,75 @@ input:checked+.slider:before {
     position: fixed;
 }
 
-.search {
-    display: inline;
-    position: fixed;
-    right: 5%;
-    padding-top: 5px;
-}
 
-
-#top-hr {
-    width: 100%;
-    left: 0px;
-    height: 2px;
-    position: fixed;
-    top: 30%;
-    background-color: white;
-}
-
-.darktheme {
-    background-color: #27496d;
-    color: white;
-}
-
-
-#input-area {
-    position: fixed;
-    top: 32%;
-    overflow-y: scroll;
-    max-height: 70%;
-    min-width: 99.5%;
-    /* left: 10px; */
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    bottom: 3%;
-}
-
-.individual-data{
+.individual-data {
     color: #FF4500;
     display: inline-block
 }
 
-.data-inside{
+.data-inside {
     color: rgb(17, 161, 17);
     margin-left: 4em;
 }
 
-.text-collapse-btn{
-        background-color: Transparent;
-        background-repeat:no-repeat;
-        border: none;
-        cursor:pointer;
-        overflow: hidden;
-        outline:none;
-        float: left;
-}
-.collapse{
+.collapse {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    width: 10px; 
+    width: 0px;
 }
-.btn-after{
+
+/* styling of buttons added to collapse text */
+.text-collapse-btn {
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    float: left;
+}
+
+.btn-after {
     background-color: #2196F3;
+}
+
+/* styling for expand and contract button */
+.expand-contract-btns {
+    position: fixed;
+    display: inline-block;
+    top: 25%;
+    padding: 0.3em 1.2em;
+    margin: 0 0.3em 0.3em 0;
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: #FFFFFF;
+    background-color: #4eb5f1;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.expand-contract-btns:hover {
+    background-color: #4095c6;
+}
+
+/* media query to make site responsive */
+@media (max-width: 800px) {
+    .header-main #top-hr {
+        display: none;
+    }
+
+    .logo-title {
+        position: fixed;
+        text-align: center;
+        font-size: 1.4rem;
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: 500;
+        left: 37%;
+
+    }
+
 }
