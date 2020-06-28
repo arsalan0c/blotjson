@@ -12,7 +12,7 @@ const CSS_FILE_PATH = "styles.css";
 const DARK_THEME_FILE_PATH = "darkTheme.js";
 const DAY_THEME_IMAGE = "Frame_1.svg";
 const DARK_THEME_IMAGE = "Frame_2-3.svg";
-const DEFAULT_PORT = 9101;
+const DEFAULT_PORT = 9103;
 const HOST = "http://127.0.0.1";
 
 /* NETWORKING VARIABLES */

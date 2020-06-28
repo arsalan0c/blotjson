@@ -3,6 +3,7 @@ const host = window.location.host;
 var webSocket = new WebSocket("ws://" + host);
 var htmlData = "";
 var allJsonObjects = [];
+var allCollapsibles = [];
 
 
 // establish websocket connection between frontend and backend
@@ -16,6 +17,126 @@ webSocket.onmessage = function (json) {
     allJsonObjects.push(JSON.parse(json.data));
     displayData();
 }
+
+const demarcationElement = str => {
+    const container = document.createElement("span");
+    container.appendChild(document.createTextNode(str));
+    container.classList.add("demarcation");
+    return container;
+}
+
+const valueElement = val => {
+    const container = document.createElement("span");
+    container.appendChild(document.createTextNode(val));
+    container.classList.add(typeof val);
+    return container;
+};
+
+const getKeyElement = val => {
+    const container = document.createElement("span");
+    container.appendChild(document.createTextNode(JSON.stringify(val)));
+    container.classList.add("key");
+    return container;
+}
+
+const dataValue = (val, expanded) => {
+    const valueText = document.createElement("span");
+    if (Array.isArray(val)) {
+        valueText.appendChild(demarcationElement("["));
+        for (const e of val) {
+            valueText.appendChild(demarcationElement(" "));
+            valueText.appendChild(document.createTextNode(JSON.stringify(e)));
+            valueText.appendChild(demarcationElement(","));
+        }
+        valueText.appendChild(demarcationElement(" "));
+        valueText.appendChild(demarcationElement("]"));
+    } else if (typeof val === "object" && Object.keys(val).length > 0) {
+        valueText.appendChild(demarcationElement("{"));
+        if (expanded) {
+            const keys = Object.keys(val);
+            for (const key of keys) {
+                valueText.appendChild(demarcationElement(" "));
+                valueText.appendChild(getKeyElement(key));
+                valueText.appendChild(demarcationElement(": "));
+                valueText.appendChild(document.createTextNode(JSON.stringify(val[key])));
+                valueText.appendChild(demarcationElement(","));
+            }
+            valueText.appendChild(demarcationElement(" "));
+        } else {
+            valueText.appendChild(document.createTextNode(" ... "));
+        }
+
+        valueText.appendChild(demarcationElement("}"));
+    } else {
+        valueText.appendChild(document.createTextNode(JSON.stringify(val)));
+    }
+
+    valueText.style.color = "#D55672";
+    valueText.style.margin = "0 5px";
+    return valueText;
+};
+
+function checkType(o){
+    return Object.prototype
+                     .toString
+                     .call(o)
+                     .replace(/\[|object\s|\]/g, '')
+                     .toLowerCase();
+}
+
+let counter = 0;
+
+const populateData = (data, dataElement) => {
+    if (checkType(data) === 'object') {
+        const keys = Object.keys(data);
+        dataElement.appendChild(demarcationElement("{"));
+
+        for (const key of keys) {
+            const keyElement = document.createElement("div");
+            keyElement.setAttribute("id", "key" + counter);
+            counter++;
+
+            keyElement.style.display = "flex";
+            keyElement.style.flexDirection = "row";
+            const keyText = getKeyElement(key);
+            keyElement.appendChild(keyText);
+
+            keyElement.appendChild(demarcationElement(": "));
+            let valueElement = dataValue(data[key]);
+
+            if (checkType(data[key]) === 'object') {
+                const responseDataElement = document.createElement("div");
+                responseDataElement.style.margin = "0 15px";
+                keyElement.appendChild(responseDataElement);
+
+                populateData(data[key], responseDataElement);
+            } else {
+                keyElement.appendChild(valueElement);
+            }
+
+            dataElement.appendChild(keyElement);
+        }
+
+        dataElement.appendChild(demarcationElement("}"));            
+    } else {
+        dataElement.appendChild(dataValue(data, true));
+    }
+};
+
+const populateElement = data => {
+    const responseElement = document.createElement("div");
+    responseElement.classList.add("response");
+
+    const responseDataElement = document.createElement("div");
+    responseDataElement.style.margin = "0 15px";
+
+    populateData(data, responseDataElement);
+
+    responseElement.appendChild(responseDataElement);
+    document.getElementById("main").appendChild(responseElement);
+}
+
+
 
 /**
  * html rendering for every individual piece of json data
@@ -47,13 +168,26 @@ function jsonConversion(jsonData) {
 
 function displayData() {
     htmlData = "";
-
+    allCollapsibles = [];
     allJsonObjects.forEach(data => {
-        htmlData += jsonConversion(data) + "<hr>";
+        //htmlData += jsonConversion(data) + "<hr>";
+        populateElement(data)
     });
 
-    document.getElementById("input-area").innerHTML = htmlData;
-    buttonCollapse();
+    const expandContractAll = document.getElementById("expand-contract-all-btn");
+    expandContractAll.addEventListener("click", () => {
+        expandContractAll.innerHTML = expandContractAll.innerHTML === "Contract" ? "Expand" : "Contract";
+        allCollapsibles.forEach(c => {
+            if (expandContractAll.innerHTML === "Contract") {
+                c.expand();
+            } else {
+                c.contract();
+            }
+        })
+    })
+
+    //document.getElementById("input-area").innerHTML = htmlData;
+    // buttonCollapse();
 }
 
 //function to add buttons for text loaded with functionality of collapsing text
@@ -77,29 +211,3 @@ function buttonCollapse() {
         });
     }
 }
-
-//to expand and contract the input-area
-
-var click = 0;
-var expandBtn = document.querySelector(".expand-contract-btns");
-expandBtn.addEventListener("click", function () {
-    let inputArea = document.querySelector("#input-area");
-    let collapseData = document.querySelectorAll(".individual-data");
-    let internalData = document.querySelectorAll(".data-inside");
-    click++;
-    console.log(click);
-    data = "";
-    if (click % 2 != 0) {
-        for (var i = 0; i < collapseData.length; i++) {
-            collapseData[i].innerHTML = "{...}"
-            internalData[i].innerHTML = "";
-            console.log("inside for loop");
-        }
-        //inputArea.innerHTML = "";
-        expandBtn.innerHTML = "Contract";
-    } else {
-        expandBtn.innerHTML = "Expand";
-        inputArea.innerHTML = htmlData;
-        buttonCollapse();
-    }
-});

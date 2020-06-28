@@ -2,7 +2,9 @@ var blot = require("./index.js");
 var testData = {
     "object a": "string a",
     "object nest": {
-        "nested object": "string nested in object b"
+        "nested object": {
+            "nested object": "string nested in object b"
+        },
     },
     "object b" : "string b"
 }
