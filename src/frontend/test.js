@@ -11,7 +11,9 @@ var testData = {
 
 var testData2 = {
     "second object" : 12345,
-    "array object" : ["one", "two" ,"three"]
+    "array objects" : ["one", "two" ,"three"],
+    "array object" : [{"a": {"b": "string ab"}}, "two" ,"three"]
+
 }
 
 var testData3 = {
@@ -53,6 +55,7 @@ var testData3 = {
         }
     }
 
+blot.openManually();
 blot.visualise(testData);
 blot.visualise(testData2);
 blot.visualise(testData3);

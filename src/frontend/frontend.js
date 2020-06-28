@@ -41,16 +41,7 @@ const getKeyElement = val => {
 
 const dataValue = (val, expanded) => {
     const valueText = document.createElement("span");
-    if (Array.isArray(val)) {
-        valueText.appendChild(demarcationElement("["));
-        for (const e of val) {
-            valueText.appendChild(demarcationElement(" "));
-            valueText.appendChild(document.createTextNode(JSON.stringify(e)));
-            valueText.appendChild(demarcationElement(","));
-        }
-        valueText.appendChild(demarcationElement(" "));
-        valueText.appendChild(demarcationElement("]"));
-    } else if (typeof val === "object" && Object.keys(val).length > 0) {
+    if (typeof val === "object" && Object.keys(val).length > 0) {
         valueText.appendChild(demarcationElement("{"));
         if (expanded) {
             const keys = Object.keys(val);
@@ -84,42 +75,79 @@ function checkType(o){
                      .toLowerCase();
 }
 
-let counter = 0;
+const addCollapsible = (value, keyElement, responseDataElement) => {
+    const collapsible = document.createElement("div");
+    collapsible.classList.add("arrow");
+    collapsible.classList.add("collapsed");
+
+    collapsible.addEventListener("click", onClick);
+    keyElement.appendChild(collapsible);
+
+    let el = responseDataElement;
+    function onClick() {
+        collapsible.classList.toggle("expanded");
+
+        keyElement.removeChild(el);
+        el = collapsible.classList.contains("expanded") ? responseDataElement : dataValue(value, false);
+        keyElement.appendChild(el);
+    }
+
+    function expand() {
+        collapsible.classList.add("expanded");
+        keyElement.removeChild(el);
+        el = responseDataElement;
+        keyElement.appendChild(el);
+    }
+
+    function contract() {
+        collapsible.classList.remove("expanded")
+        keyElement.removeChild(el);
+        el = dataValue(value, false);
+        keyElement.appendChild(el);
+    }
+
+    allCollapsibles.push({expand, contract});
+    return expand;
+}
 
 const populateData = (data, dataElement) => {
     if (checkType(data) === 'object') {
-        const keys = Object.keys(data);
-        dataElement.appendChild(demarcationElement("{"));
+        const childDataElement = document.createElement("div");
+        childDataElement.style.margin = "0 15px";
+
+        const keys = Object.keys(data);  
+        const expandFn = addCollapsible(data, dataElement, childDataElement);
+
+        childDataElement.appendChild(demarcationElement("{"));
 
         for (const key of keys) {
             const keyElement = document.createElement("div");
-            keyElement.setAttribute("id", "key" + counter);
-            counter++;
 
-            keyElement.style.display = "flex";
-            keyElement.style.flexDirection = "row";
             const keyText = getKeyElement(key);
             keyElement.appendChild(keyText);
-
             keyElement.appendChild(demarcationElement(": "));
-            let valueElement = dataValue(data[key]);
+            keyElement.style.display = "flex";
+            keyElement.style.flexDirection = "row";
+    
+            populateData(data[key], keyElement);
 
-            if (checkType(data[key]) === 'object') {
-                const responseDataElement = document.createElement("div");
-                responseDataElement.style.margin = "0 15px";
-                keyElement.appendChild(responseDataElement);
-
-                populateData(data[key], responseDataElement);
-            } else {
-                keyElement.appendChild(valueElement);
-            }
-
-            dataElement.appendChild(keyElement);
+            childDataElement.appendChild(keyElement);
         }
 
-        dataElement.appendChild(demarcationElement("}"));            
+        childDataElement.appendChild(demarcationElement("}"));            
+        dataElement.appendChild(childDataElement);
+        expandFn();
+    } else if (Array.isArray(data)) {
+        dataElement.appendChild(demarcationElement("["));
+
+        for (const el of data) {
+            populateData(el, dataElement);
+            dataElement.appendChild(demarcationElement(","));
+        }
+
+        dataElement.appendChild(demarcationElement("]"));
     } else {
-        dataElement.appendChild(dataValue(data, true));
+        dataElement.appendChild(dataValue(data, false));
     }
 };
 
@@ -127,16 +155,10 @@ const populateElement = data => {
     const responseElement = document.createElement("div");
     responseElement.classList.add("response");
 
-    const responseDataElement = document.createElement("div");
-    responseDataElement.style.margin = "0 15px";
+    populateData(data, responseElement);
 
-    populateData(data, responseDataElement);
-
-    responseElement.appendChild(responseDataElement);
     document.getElementById("main").appendChild(responseElement);
-}
-
-
+};
 
 /**
  * html rendering for every individual piece of json data
@@ -185,29 +207,4 @@ function displayData() {
             }
         })
     })
-
-    //document.getElementById("input-area").innerHTML = htmlData;
-    // buttonCollapse();
-}
-
-//function to add buttons for text loaded with functionality of collapsing text
-/**
- * to add in a button for every json object that collapses the object upon a click
- */
-function buttonCollapse() {
-    let collapsers = document.getElementsByClassName("text-collapse-btn");
-    var collapsableData = document.querySelectorAll(".individual-data");
-    var internalCollapsableData = document.querySelectorAll(".data-inside");
-    for (let i = 0; i < collapsers.length; i++) {
-        console.log("test");
-        collapsers[i].addEventListener("click", function () {
-            console.log("clicked");
-            collapsers[i].classList.toggle("btn-after");
-            //add collapse for this click to all text below
-            for (let j = i; j < collapsableData.length; j++) {
-                collapsableData[j].classList.toggle("collapse");
-                internalCollapsableData[j].classList.toggle("collapse");
-            }
-        });
-    }
 }
