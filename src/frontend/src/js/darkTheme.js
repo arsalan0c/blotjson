@@ -9,8 +9,8 @@ themeButton.addEventListener("click", function () {
     clickCount++;
     var image = document.querySelector(".main-logo");
     if (clickCount % 2 === 0) {
-        image.src = "Frame_1.svg";
+        image.src = "../static/images/Frame_1.svg";
     } else {
-        image.src = "Frame_2-3.svg";
+        image.src = "../static/images/Frame_2-3.svg";
     }
 });
