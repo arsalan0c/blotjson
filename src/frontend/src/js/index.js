@@ -1,4 +1,4 @@
-const TOP_DIV = "main"; // id of the outer most div
+const TOP_DIV = "main"; // id of the outer most div to which to add data
 
 const EXPAND_COLLAPSE_ALL_BTN = "expand-collapse-all-btn";
 const COLLAPSE_ALL_BTN_MSG = "Collapse All";
