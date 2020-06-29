@@ -4,8 +4,9 @@
   "description": "Frontend for the visualisation of JSON.",
   "main": "index.html",
   "scripts": {
-    "build-dev": "webpack --mode development",
-    "build-prod": "webpack --mode production"
+    "checks": "npx prettier --check src/*.js && npx eslint src/*.js",
+    "build-dev": "npm run checks && webpack --config webpack.config.js --mode development",
+    "build-prod": "npm run checks && webpack --config webpack.config.js --mode production"
   },
   "repository": {
     "type": "git",
