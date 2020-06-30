@@ -2,6 +2,9 @@
 gives the slider in the html page functionality to change theme of the page
 */
 
+const LOGO_LIGHT = "../images/logo_light.svg";
+const LOGO_DARK = "../images/logo_dark.svg";
+
 var themeButton = document.querySelector(".slider");
 var clickCount = 0;
 themeButton.addEventListener("click", function () {
@@ -9,8 +12,8 @@ themeButton.addEventListener("click", function () {
   clickCount++;
   var image = document.querySelector(".main-logo");
   if (clickCount % 2 === 0) {
-    image.src = "../static/images/Frame_1.svg";
+    image.src = LOGO_LIGHT;
   } else {
-    image.src = "../static/images/Frame_2-3.svg";
+    image.src = LOGO_DARK;
   }
 });

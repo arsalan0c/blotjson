@@ -4,9 +4,9 @@
   "description": "Frontend for the visualisation of JSON.",
   "main": "index.html",
   "scripts": {
-    "checks": "npx prettier --check src/js/*.js && npx eslint src/js/*.js",
-    "build-dev": "npm run checks && webpack --config webpack.config.js --mode development",
-    "build-prod": "npm run checks && webpack --config webpack.config.js --mode production"
+    "clean": "rm -r dist/",
+    "checks": "npx prettier --write src/js/*.js && npx eslint src/js/*.js --fix",
+    "build": "npm run checks && node inline.js && cp -r src/images dist/"
   },
   "repository": {
     "type": "git",
@@ -20,13 +20,10 @@
   "homepage": "https://github.com/arsalanc-v2/blotjson#readme",
   "dependencies": {},
   "devDependencies": {
-    "copy-webpack-plugin": "^6.0.2",
     "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "html-webpack-plugin": "^4.3.0",
-    "prettier": "^2.0.5",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12"
+    "inliner": "^1.13.1",
+    "prettier": "^2.0.5"
   }
 }
