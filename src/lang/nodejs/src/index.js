@@ -7,8 +7,9 @@ const errors = require('./errorMessages.js');
 /* CONSTANTS */
 
 // Frontend file paths
-const HTML_FILE_PATH = 'index.html';
-const JS_FILE_PATH = 'frontend.js';
+const HTML_FILE_PATH = './index.html';
+const DARK_LOGO_PATH = './images/logo_dark.svg';
+const LIGHT_LOGO_PATH = './images/logo_light.svg';
 
 const DEFAULT_PORT = 9101;
 const HOST = 'http://127.0.0.1';
@@ -112,8 +113,11 @@ function startServer(port) {
       case '/':
         renderFile(res, HTML_FILE_PATH, 'text/html');
         break;
-      case '/' + JS_FILE_PATH:
-        renderFile(res, JS_FILE_PATH, 'text/javascript');
+      case '/images/logo_light.svg':
+        renderFile(res, LIGHT_LOGO_PATH, 'image/svg+xml');
+        break;
+      case '/images/logo_dark.svg':
+        renderFile(res, DARK_LOGO_PATH, 'image/svg+xml');
         break;
       default:
         res.writeHead(404, {

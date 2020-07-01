@@ -2,8 +2,8 @@
 gives the slider in the html page functionality to change theme of the page
 */
 
-const LOGO_LIGHT = "../images/logo_light.svg";
-const LOGO_DARK = "../images/logo_dark.svg";
+const LOGO_LIGHT = "images/logo_light.svg";
+const LOGO_DARK = "images/logo_dark.svg";
 
 var themeButton = document.querySelector(".slider");
 var clickCount = 0;
