@@ -34,7 +34,7 @@ const waitingData = [];
 
 const blotFns = {
   setPort: setPort,
-  shouldOpenManually: shouldOpenManually,
+  shouldOpenBrowser: shouldOpenBrowser,
   visualise: visualise
 };
 module.exports = blotFns;
@@ -74,11 +74,11 @@ function setPort(customPort) {
 }
 
 /**
- * Configures whether the browser should open manually
- * @param bool Whether the browser should open manually
+ * Configures whether the browser should open automatically
+ * @param bool Whether the browser should open automatically
  * @returns {Object} Object whose keys point to the blot functions
  */
-function shouldOpenManually(bool=false) {
+function shouldOpenBrowser(bool=true) {
   openBrowser = bool;
   return blotFns;
 }
