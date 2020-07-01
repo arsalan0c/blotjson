@@ -118,15 +118,17 @@ const addCollapsible = (childElement, parentElement) => {
    */
   function onClick() {
     collapsibleElement.classList.toggle(CLASS_EXPANDED);
-    repeat();
+    toggleChild();
   }
 
-  function repeat() {
+  /**
+   * Toggles the child element between being expanded and collapsed
+   */
+  function toggleChild() {
     parentElement.removeChild(el);
     el = collapsibleElement.classList.contains(CLASS_EXPANDED)
       ? childElement
       : collapsedElement;
-    
     parentElement.appendChild(el);
   }
 
@@ -144,7 +146,7 @@ const addCollapsible = (childElement, parentElement) => {
       collapsibleElement.classList.remove(CLASS_EXPANDED);
     }
 
-    repeat();
+    toggleChild();
   }
 
   allCollapsibles.push(expandCollapsible);
