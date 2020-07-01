@@ -78,7 +78,7 @@ function setPort(customPort) {
  * @param bool Whether the browser should open automatically
  * @returns {Object} Object whose keys point to the blot functions
  */
-function shouldOpenBrowser(bool=true) {
+function shouldOpenBrowser(bool = true) {
   openBrowser = bool;
   return blotFns;
 }
