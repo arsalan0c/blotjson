@@ -28,7 +28,7 @@ webSocket.onmessage = (json) => {
  * Renders an element, a distinct piece of data
  * @param {*} el The element to be visualised
  */
-const displayElement = el => {
+const displayElement = (el) => {
   const htmlElement = document.createElement("div");
   htmlElement.classList.add("element");
 
@@ -178,7 +178,7 @@ const getCollapsedElement = () => {
  * @param {String} data Components of data that is not a key or value eg. a bracket
  * @returns A HTML element for data that is not a key or a value
  */
-const getMiscElement = data => {
+const getMiscElement = (data) => {
   const el = document.createElement("span");
   el.appendChild(document.createTextNode(data));
   isArrayBracket(data) || data === COLLAPSED_OBJ
@@ -192,7 +192,7 @@ const getMiscElement = data => {
  * @param {String} key
  * @returns A HTML element for an object entry
  */
-const getObjEntryElement = key => {
+const getObjEntryElement = (key) => {
   const el = document.createElement("div");
   const keyText = getKeyElement(key);
   el.appendChild(keyText);
@@ -205,7 +205,7 @@ const getObjEntryElement = key => {
  * @param {String} key
  * @returns A HTML element for a key
  */
-const getKeyElement = key => {
+const getKeyElement = (key) => {
   const el = document.createElement("span");
   el.appendChild(document.createTextNode(JSON.stringify(key)));
   el.classList.add("key");
@@ -216,7 +216,7 @@ const getKeyElement = key => {
  * @param {String} val
  * @returns A HTML element for a value
  */
-const getValueElement = val => {
+const getValueElement = (val) => {
   const el = document.createElement("span");
   el.appendChild(document.createTextNode(JSON.stringify(val)));
   el.classList.add("value");
@@ -235,7 +235,7 @@ const isArrayBracket = (str) => str === "[" || str === "]";
 const registerExpandAll = () => {
   const btn = document.getElementById(EXPAND_ALL_BTN);
   btn.addEventListener("click", () => {
-    allCollapsibles.forEach(expandCollapsible => {
+    allCollapsibles.forEach((expandCollapsible) => {
       expandCollapsible(true);
     });
   });
@@ -247,7 +247,7 @@ const registerExpandAll = () => {
 const registerCollapseAll = () => {
   const btn = document.getElementById(COLLAPSE_ALL_BTN);
   btn.addEventListener("click", () => {
-    allCollapsibles.forEach(expandCollapsible => {
+    allCollapsibles.forEach((expandCollapsible) => {
       expandCollapsible(false);
     });
   });
@@ -257,5 +257,5 @@ const registerCollapseAll = () => {
  * @param {*} data
  * @returns true if data is an object. false otherwise.
  */
-const isObj = data =>
+const isObj = (data) =>
   typeof data === "object" && data !== null && !Array.isArray(data);
