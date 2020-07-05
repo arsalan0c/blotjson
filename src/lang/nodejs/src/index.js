@@ -1,14 +1,20 @@
 const http = require('http');
 const open = require('open');
 const fs = require('fs');
+const path = require('path');
 const WebSocketServer = require('websocket').server;
 const errors = require('./errorMessages.js');
 
 /* CONSTANTS */
 
 // Frontend file paths
-const HTML_FILE_PATH = 'index.html';
-const JS_FILE_PATH = 'frontend.js';
+const HTML_FILE_PATH = './dist/index.html';
+const DARK_LOGO_PATH = './dist/images/logo_dark.svg';
+const LIGHT_LOGO_PATH = './dist/images/logo_light.svg';
+
+const HTML_URL = '/';
+const LIGHT_LOGO_URL = '/images/logo_light.svg';
+const DARK_LOGO_URL = '/images/logo_dark.svg';
 
 const DEFAULT_PORT = 9101;
 const HOST = 'http://127.0.0.1';
@@ -26,9 +32,12 @@ let openBrowser = true;
   Once handshake established, the data will get sent */
 const waitingData = [];
 
-exports.visualise = visualise;
-exports.setPort = setPort;
-exports.openManually = openManually;
+const blotFns = {
+  setPort: setPort,
+  shouldOpenBrowser: shouldOpenBrowser,
+  visualise: visualise
+};
+module.exports = blotFns;
 
 /**
  * Displays json data in a browser
@@ -56,50 +65,22 @@ function visualise(jsonStr) {
 /**
  * Sets the port of the server to a custom user-defined port
  * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
- * @return {Object} Object whose keys point to the other blot functions
+ * @returns {Object} Object whose keys point to the blot functions
  */
 function setPort(customPort) {
   validatePort(customPort);
   port = customPort;
-  return {
-    visualise: visualise,
-    openManually: openManually
-  };
+  return blotFns;
 }
 
 /**
- * Stops the browser from automatically opening
- * @return {Object} Object whose keys point to the other blot functions
+ * Configures whether the browser should open automatically
+ * @param bool Whether the browser should open automatically
+ * @returns {Object} Object whose keys point to the blot functions
  */
-function openManually() {
-  openBrowser = false;
-  return {
-    visualise: visualise,
-    setPort: setPort
-  };
-}
-
-/**
- * Renders a file as part of a response to a request
- * @param {*} response Object representing the response
- * @param {String} filepath Path to the file to be rendered
- * @param {String} contentType The media type of the file
- */
-function renderFile(response, filepath, contentType) {
-  fs.readFile(filepath, (err, data) => {
-    if (err) {
-      console.log(err);
-      response.writeHead(500, {
-        'Content-Type': 'text/plain'
-      });
-      response.end('500 - Internal Server Error');
-    } else {
-      response.writeHead(200, {
-        'Content-Type': contentType
-      });
-      response.end(data, 'utf-8');
-    }
-  });
+function shouldOpenBrowser(bool = true) {
+  openBrowser = bool;
+  return blotFns;
 }
 
 /**
@@ -109,11 +90,14 @@ function renderFile(response, filepath, contentType) {
 function startServer(port) {
   httpServer = http.createServer((req, res) => {
     switch (req.url) {
-      case '/':
+      case HTML_URL:
         renderFile(res, HTML_FILE_PATH, 'text/html');
         break;
-      case '/' + JS_FILE_PATH:
-        renderFile(res, JS_FILE_PATH, 'text/javascript');
+      case LIGHT_LOGO_URL:
+        renderFile(res, LIGHT_LOGO_PATH, 'image/svg+xml');
+        break;
+      case DARK_LOGO_URL:
+        renderFile(res, DARK_LOGO_PATH, 'image/svg+xml');
         break;
       default:
         res.writeHead(404, {
@@ -152,6 +136,30 @@ function setWebsocket() {
     waitingData.forEach((data) => {
       connection.send(data);
     });
+  });
+}
+
+/**
+ * Renders a file as part of a response to a request
+ * @param {*} response Object representing the response
+ * @param {String} relativePath Relative path to the file to be rendered
+ * @param {String} contentType The media type of the file
+ */
+function renderFile(response, relativePath, contentType) {
+  const absPath = path.resolve(__dirname, relativePath);
+  fs.readFile(absPath, (err, data) => {
+    if (err) {
+      console.log(err);
+      response.writeHead(500, {
+        'Content-Type': 'text/plain'
+      });
+      response.end('500 - Internal Server Error');
+    } else {
+      response.writeHead(200, {
+        'Content-Type': contentType
+      });
+      response.end(data, 'utf-8');
+    }
   });
 }
 

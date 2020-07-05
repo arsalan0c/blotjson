@@ -5,7 +5,7 @@ const fs = require('fs');
 let ws = null;
 
 beforeAll(() => {
-  blot.setPort(3000).openManually();
+  blot.setPort(3000).shouldOpenBrowser(false);
   ws = new WebSocketClient('ws://localhost:3000');
 });
 

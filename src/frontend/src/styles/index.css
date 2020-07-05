@@ -32,6 +32,12 @@ body {
     padding: 2%;
 }
 
+.obj-entry {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
 .arrowspace {
     content: "\00a0"
 }
@@ -41,6 +47,11 @@ body {
     color: #444444;
     font-size: 13px;
     position: absolute;
+    padding-right: 15px;
+}
+
+.collapsedobj {
+    content: " ... "
 }
 
 .misc {
@@ -101,12 +112,6 @@ body {
     height: 0;
 }
 
-.control-btn {
-    text-align: left;
-    margin: auto;
-    margin-left: 3%;
-}
-
 /* styling for slider */
 .slider {
     position: absolute;
@@ -165,9 +170,15 @@ input:checked+.slider:before {
     background-color: #2196F3;
 }
 
-/* styling for expand and collapse button */
-#expand-collapse-all-btn {
+.control-btns {
+    text-align: left;
+    margin: auto;
+    margin-left: 3%;
+}
+
+.control-btn {
     outline: none;
+    margin: 5px;
     padding: 0.3em 1.2em;
     border-radius: 2em;
     box-sizing: border-box;
@@ -179,6 +190,6 @@ input:checked+.slider:before {
     border: none;
 }
 
-#expand-collapse-all-btn:hover {
+.control-btn:hover {
     background-color: #4095c6;
 }

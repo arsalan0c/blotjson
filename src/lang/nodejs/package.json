@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --forceExit",
+    "fixstyle": "npx prettier --write src/*.js && npx eslint *src/index.js --fix",
     "build": "npx prettier --check src/*.js && npx eslint *src/index.js && npm test"
   },
   "repository": {
@@ -35,7 +36,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npx prettier --check src/*.js && npx eslint *src/index.js"
+      "pre-commit": "npm run fixstyle"
     }
   }
 }

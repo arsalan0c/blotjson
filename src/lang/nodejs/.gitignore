@@ -2,6 +2,7 @@ node_modules/
 
 # unnecesary files made by vim
 *gitignore*
+*~
 
 # folders
 public/
