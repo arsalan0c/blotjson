@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -r dist/",
     "checks": "npx prettier --write src/js/*.js && npx eslint src/js/*.js --fix",
-    "build": "npm run checks && node inline.js && cp -r src/images dist/"
+    "build": "npm run clean && npm run checks && node inline.js && cp -r src/images dist/"
   },
   "repository": {
     "type": "git",

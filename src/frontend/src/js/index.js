@@ -8,17 +8,11 @@ const CLASS_EXPANDED = "expanded";
 const CLASS_COLLAPSED = "collapsed";
 
 const host = window.location.host;
-const allElements = []; // stores all elements to be displayed
-var allCollapsibles = []; // stores all collapsible HTML elements for expand/collapse all functionality
+const allCollapsibles = []; // stores all collapsible HTML elements for expand/collapse all functionality
 
 const webSocket = new WebSocket("ws://" + host);
 webSocket.onmessage = (json) => {
-  allCollapsibles = []; // remove all exisiting collapsibles as new ones will be added when all the elements are subsequently displayed
-
-  allElements.push(JSON.parse(json.data));
-  allElements.forEach((el) => {
-    displayElement(el);
-  });
+  displayElement(JSON.parse(json.data));
 
   registerExpandAll();
   registerCollapseAll();
