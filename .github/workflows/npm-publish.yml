@@ -12,18 +12,6 @@ on:
       - "src/frontend/*"
 
 jobs:
-  build-node:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src/lang/nodejs
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - run: npm ci
-      - run: npm run transfer-files
   build-frontend:
     runs-on: ubuntu-latest
     defaults:
@@ -36,6 +24,19 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm run build
+  build-node:
+    needs: [build-frontend]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/lang/nodejs
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: npm ci
+      - run: npm run transfer-files
 
   publish-gpr:
     needs: [build-node, build-frontend]
@@ -46,7 +47,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
-      - run: cp README.md ./dist/
-      - run: npm publish dist
+      - run: cp README.md src/dist/
+      - run: npm publish src/dist/
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
