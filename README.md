@@ -1,5 +1,3 @@
-![Nodejs CI Build](https://github.com/arsalanc-v2/blotjson/workflows/Nodejs%20CI%20Build/badge.svg?branch=development)
-
 # blotjson
 
 > **Blot:**
