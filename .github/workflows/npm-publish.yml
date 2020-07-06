@@ -4,22 +4,48 @@
 name: Node.js Package
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: 
+      - master
+    paths:
+      - "src/lang/nodejs/*"
+      - "src/frontend/*"
+  pull_request:
+    branches: 
+      - master
+    paths:
+      - "src/lang/nodejs/*"
+      - "src/frontend/*"
 
 jobs:
-  build:
+  build-node:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/lang/nodejs
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
       - run: npm ci
-      - run: npm test
+      - run: npm run build
+      - run: npm run transfer-files
+  build-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/frontend
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: npm ci
+      - run: npm run build
 
   publish-npm:
-    needs: build
+    needs: [build-node, build-frontend]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,12 +54,13 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - run: npm ci
+      - run: cp README.md ./dist/
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
   publish-gpr:
-    needs: build
+    needs: [build-node, build-frontend]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
