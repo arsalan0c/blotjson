@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --forceExit",
     "fixstyle": "npx prettier --write src/*.js && npx eslint *src/index.js --fix",
-    "build": "npx prettier --check src/*.js && npx eslint *src/index.js && npm test"
+    "transfer-files": "cp src/index.js ../../dist/ && cp src/errorMessages.js ../../dist/ && cp package.json ../../dist/",
+    "build": "npx prettier --check src/*.js && npx eslint *src/index.js && npm test && npm run transfer-files"
   },
   "repository": {
     "type": "git",
