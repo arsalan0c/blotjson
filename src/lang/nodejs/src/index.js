@@ -8,9 +8,9 @@ const errors = require('./errorMessages.js');
 /* CONSTANTS */
 
 // Frontend file paths
-const HTML_FILE_PATH = './dist/index.html';
-const DARK_LOGO_PATH = './dist/images/logo_dark.svg';
-const LIGHT_LOGO_PATH = './dist/images/logo_light.svg';
+const HTML_FILE_PATH = './index.html';
+const DARK_LOGO_PATH = './images/logo_dark.svg';
+const LIGHT_LOGO_PATH = './images/logo_light.svg';
 
 const HTML_URL = '/';
 const LIGHT_LOGO_URL = '/images/logo_light.svg';
