@@ -1,5 +1,5 @@
-var Inliner = require('inliner');
-var fs = require('fs');
+const Inliner = require('inliner');
+const fs = require('fs');
 
 new Inliner('./src/index.html', function (error, html) {
     if (error) {
