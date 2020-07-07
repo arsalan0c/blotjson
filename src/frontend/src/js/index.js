@@ -189,14 +189,14 @@ const getCollapsibleElement = () => {
 };
 
 /**
- * @param {String} data Components of data that is not a key or value eg. a bracket
- * @param {Boolean} alt
+ * @param {String} data Components of data that are not a key or value eg. a bracket
+ * @param {Boolean} isAlt Whether an alternate style sbould be applied or not
  * @returns A HTML element for data that is not a key or a value
  */
-const getMiscElement = (data, alt = false) => {
+const getMiscElement = (data, isAlt = false) => {
   const el = document.createElement("span");
   el.appendChild(document.createTextNode(data));
-  el.classList.add(alt ? "misc-alt" : "misc");
+  el.classList.add(isAlt ? "misc-alt" : "misc");
 
   return el;
 };
