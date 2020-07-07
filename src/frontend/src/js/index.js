@@ -3,7 +3,7 @@ const TOP_DIV = "main"; // id of the outer most div to which to add data
 const EXPAND_ALL_BTN = "expand-all-btn";
 const COLLAPSE_ALL_BTN = "collapse-all-btn";
 
-const COLLAPSED_OBJ = " ... ";
+const ELLIPSIS = " ... ";
 const CLASS_EXPANDED = "expanded";
 const CLASS_COLLAPSED = "collapsed";
 
@@ -56,7 +56,7 @@ const displayObject = (obj, parentElement) => {
   objElement.style.margin = "0 15px";
 
   const keys = Object.keys(obj);
-  const expandFn = addCollapsible(objElement, parentElement);
+  const expandFn = addCollapsible(true, keys.length, objElement, parentElement);
 
   objElement.appendChild(getMiscElement("{"));
   for (const key of keys) {
@@ -77,12 +77,20 @@ const displayObject = (obj, parentElement) => {
  * @param {*} parentElement The HTML element in which to visualise the array
  */
 const displayArray = (arr, parentElement) => {
-  parentElement.appendChild(getMiscElement("["));
+  const arrElement = document.createElement("div");
+  arrElement.style.margin = "0 15px";
+
+  const expandFn = addCollapsible(false, arr.length, arrElement, parentElement);
+
+  arrElement.appendChild(getMiscElement("["));
   for (const el of arr) {
-    displayData(el, parentElement);
-    parentElement.appendChild(getMiscElement(","));
+    displayData(el, arrElement);
+    arrElement.appendChild(getMiscElement(","));
   }
-  parentElement.appendChild(getMiscElement("]"));
+  arrElement.appendChild(getMiscElement("]"));
+
+  parentElement.appendChild(arrElement);
+  expandFn(true);
 };
 
 /**
@@ -96,13 +104,14 @@ const displayValue = (val, parentElement) => {
 
 /**
  * Adds a button to expand/collapse a child HTML element
- * @param {*} value The value of the child HTML element
+ * @param {Boolean} isObj Whether an object or an array is being collapsed
+ * @param {Number} numKeys Number of keys that the child element has
  * @param {*} childElement The expanded HTML element
  * @param {*} parentElement The HTML element to which to add the button
  * @returns A function for expanding or collapsing the child element
  */
-const addCollapsible = (childElement, parentElement) => {
-  const collapsedElement = getCollapsedElement();
+const addCollapsible = (isObj, numKeys, childElement, parentElement) => {
+  const collapsedElement = getCollapsedElement(isObj, numKeys);
   const collapsibleElement = getCollapsibleElement();
 
   let el = childElement;
@@ -148,6 +157,28 @@ const addCollapsible = (childElement, parentElement) => {
 };
 
 /**
+ * @param {Boolean} isObj Whether the element to be collapsed is an obj or an array
+ * @param {Number} numKeys Number of keys that the element to be collapsed has
+ * @returns A HTML element for a collapsed object
+ */
+const getCollapsedElement = (isObj, numKeys) => {
+  const el = document.createElement("div");
+
+  if (isObj) {
+    el.appendChild(getMiscElement("{"));
+    el.appendChild(getMiscElement(ELLIPSIS, true));
+    el.appendChild(getMiscElement("}"));
+  } else {
+    el.appendChild(getMiscElement("["));
+    el.appendChild(getMiscElement(ELLIPSIS, true));
+    el.appendChild(getMiscElement("]"));
+  }
+  el.appendChild(getMiscElement(" (" + numKeys + ")", true));
+
+  return el;
+};
+
+/**
  * @returns A HTML element for a collapsible button
  */
 const getCollapsibleElement = () => {
@@ -158,26 +189,14 @@ const getCollapsibleElement = () => {
 };
 
 /**
- * @returns A HTML element for a collapsed object
- */
-const getCollapsedElement = () => {
-  const el = document.createElement("div");
-  el.appendChild(getMiscElement("{"));
-  el.appendChild(getMiscElement(COLLAPSED_OBJ));
-  el.appendChild(getMiscElement("}"));
-  return el;
-};
-
-/**
  * @param {String} data Components of data that is not a key or value eg. a bracket
+ * @param {Boolean} alt
  * @returns A HTML element for data that is not a key or a value
  */
-const getMiscElement = (data) => {
+const getMiscElement = (data, alt = false) => {
   const el = document.createElement("span");
   el.appendChild(document.createTextNode(data));
-  isArrayBracket(data) || data === COLLAPSED_OBJ
-    ? el.classList.add("misc-alt")
-    : el.classList.add("misc");
+  el.classList.add(alt ? "misc-alt" : "misc");
 
   return el;
 };

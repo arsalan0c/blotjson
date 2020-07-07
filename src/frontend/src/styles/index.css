@@ -8,6 +8,7 @@
 
 body {
     font-family: Georgia;
+    font-size: 25px;
     height: 100vh;
     width: 100%;
     min-width: 500px;
@@ -38,10 +39,6 @@ body {
     justify-content: flex-start;
 }
 
-.arrowspace {
-    content: "\00a0"
-}
-
 .arrow::before {
     content: "\00a0 \00a0 \25ba \00a0 \00a0";
     color: #444444;
@@ -59,7 +56,7 @@ body {
 }
 
 .misc-alt {
-    color: #D55672;
+    color: #B22222;
 }
 
 .key {
@@ -68,7 +65,7 @@ body {
 }
 
 .value {
-    color: #00A572;
+    color: #3D9612;
     margin: 0 5px;
 }
 
@@ -86,8 +83,6 @@ body {
     transform-origin: top left;
     transition: transform 0.1s linear;
 }
-
-
 
 .flexcolumn {
     display: flex;
@@ -184,6 +179,7 @@ input:checked+.slider:before {
     box-sizing: border-box;
     text-decoration: none;
     font-weight: 300;
+    font-size: 15px;
     color: #FFFFFF;
     background-color: #4eb5f1;
     transition: all 0.2s;
