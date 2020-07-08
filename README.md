@@ -32,7 +32,7 @@ See [redacted] for detailed documentation.
 * objects and arrays can be collapsed for simpler exploration
 * supports dark mode
 
-## Why you might want to use *blotjson*
+## Why *blotjson*
 * An external application is not required. There is no need to copy/paste or export your data
 * An arbitrary number of JSON data can be visualised simply
 
