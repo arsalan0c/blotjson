@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/browser"
 )
 
-// Frontend file paths
+// frontend file paths
 const htmlFilePath string = "./dist/index.html"
 const darkLogoPath string = "./dist/images/logo_dark.svg"
 const lightLogoPath string = "./dist/images/logo_light.svg"
