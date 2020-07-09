@@ -1,0 +1,23 @@
+name: Go CI
+
+# Trigger build on push and pull requests
+on:
+  push:
+    paths:
+      - "src/lang/go/github.com/arsalanc-v2/blotjson"
+  pull_request:
+    paths:
+      - "src/lang/go/github.com/arsalanc-v2/blotjson"
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/lang/go/github.com/arsalanc-v2/blotjson
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - run: go test ./
