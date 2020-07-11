@@ -78,14 +78,23 @@ const displayObject = (obj, parentElement) => {
  */
 const displayArray = (arr, parentElement) => {
   const arrElement = document.createElement("div");
-  arrElement.style.margin = "0 15px";
+  arrElement.style.margin = "0 12px";
 
   const expandFn = addCollapsible(false, arr.length, arrElement, parentElement);
 
   arrElement.appendChild(getMiscElement("["));
-  for (const el of arr) {
+  for (let i = 0; i < arr.length; i++) {
+    const el = arr[i];
+
+    arrElement.append(document.createElement("br"));
+    arrElement.append(getArrayIdElement(i));
     displayData(el, arrElement);
-    arrElement.appendChild(getMiscElement(","));
+
+    if (i === arr.length - 1) {
+      arrElement.appendChild(document.createElement("br"));
+    } else {
+      arrElement.appendChild(getMiscElement(","));
+    }
   }
   arrElement.appendChild(getMiscElement("]"));
 
@@ -103,6 +112,19 @@ const displayValue = (val, parentElement) => {
 };
 
 /**
+ * @param i {Number} Array index for which to create the element
+ * @returns A HTML element for the index of an array
+ */
+const getArrayIdElement = (i) => {
+  const idElement = document.createElement("span");
+  idElement.appendChild(document.createTextNode("\u00A0\u00A0")); // add spaces to indent the elements of the array
+  idElement.appendChild(getMiscElement(" " + i + ": ", true));
+  idElement.style.fontSize = "15px";
+
+  return idElement;
+};
+
+/**
  * Adds a button to expand/collapse a child HTML element
  * @param {Boolean} isObj Whether an object or an array is being collapsed
  * @param {Number} numKeys Number of keys that the child element has
@@ -113,6 +135,7 @@ const displayValue = (val, parentElement) => {
 const addCollapsible = (isObj, numKeys, childElement, parentElement) => {
   const collapsedElement = getCollapsedElement(isObj, numKeys);
   const collapsibleElement = getCollapsibleElement();
+  const spaceElement = document.createTextNode("\u00A0\u00A0\u00A0\u00A0");
 
   let el = childElement;
 
@@ -129,13 +152,22 @@ const addCollapsible = (isObj, numKeys, childElement, parentElement) => {
    */
   function toggleChild() {
     parentElement.removeChild(el);
-    el = collapsibleElement.classList.contains(CLASS_EXPANDED)
-      ? childElement
-      : collapsedElement;
+    parentElement.removeChild(collapsibleElement);
+    if (collapsibleElement.classList.contains(CLASS_EXPANDED)) {
+      parentElement.appendChild(spaceElement);
+      parentElement.appendChild(collapsibleElement);
+      el = childElement;
+    } else {
+      parentElement.removeChild(spaceElement);
+      parentElement.appendChild(collapsibleElement);
+      el = collapsedElement;
+    }
+
     parentElement.appendChild(el);
   }
 
   collapsibleElement.addEventListener("click", onClick);
+  parentElement.appendChild(spaceElement);
   parentElement.appendChild(collapsibleElement);
 
   /**
@@ -143,13 +175,19 @@ const addCollapsible = (isObj, numKeys, childElement, parentElement) => {
    * @param {Boolean} shouldExpand Expands the collapsible if true. Collapses it otherwise
    */
   function expandCollapsible(shouldExpand) {
-    if (shouldExpand) {
+    if (
+      shouldExpand &&
+      !collapsibleElement.classList.contains(CLASS_EXPANDED)
+    ) {
       collapsibleElement.classList.add(CLASS_EXPANDED);
-    } else {
+      toggleChild();
+    } else if (
+      !shouldExpand &&
+      collapsibleElement.classList.contains(CLASS_EXPANDED)
+    ) {
       collapsibleElement.classList.remove(CLASS_EXPANDED);
+      toggleChild();
     }
-
-    toggleChild();
   }
 
   allCollapsibles.push(expandCollapsible);
@@ -163,6 +201,7 @@ const addCollapsible = (isObj, numKeys, childElement, parentElement) => {
  */
 const getCollapsedElement = (isObj, numKeys) => {
   const el = document.createElement("div");
+  el.appendChild(document.createTextNode("\u00A0\u00A0\u00A0\u00A0\u00A0"));
 
   if (isObj) {
     el.appendChild(getMiscElement("{"));
