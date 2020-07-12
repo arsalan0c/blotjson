@@ -11,3 +11,7 @@ public/
 src/userTest.js
 src/frontend.js
 src/index.html
+
+# jsdoc
+out/*
+!out/global.html
