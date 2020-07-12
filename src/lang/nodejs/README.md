@@ -1,4 +1,4 @@
-![Alt text](./logo_light.svg) 
+![Alt text](../../../logo_light.svg) 
 # blotjson
 
 **Blot:**
@@ -10,7 +10,6 @@
 
 ## Basic Usage
 
-### Node.js
 **Installation**
 ```
 npm i --save-dev blotjson
