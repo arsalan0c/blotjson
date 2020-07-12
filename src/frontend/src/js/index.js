@@ -3,7 +3,7 @@ const TOP_DIV = "main"; // id of the outer most div to which to add data
 const EXPAND_ALL_BTN = "expand-all-btn";
 const COLLAPSE_ALL_BTN = "collapse-all-btn";
 
-const COLLAPSED_OBJ = " ... ";
+const ELLIPSIS = " ... ";
 const CLASS_EXPANDED = "expanded";
 const CLASS_COLLAPSED = "collapsed";
 
@@ -56,7 +56,7 @@ const displayObject = (obj, parentElement) => {
   objElement.style.margin = "0 15px";
 
   const keys = Object.keys(obj);
-  const expandFn = addCollapsible(objElement, parentElement);
+  const expandFn = addCollapsible(true, keys.length, objElement, parentElement);
 
   objElement.appendChild(getMiscElement("{"));
   for (const key of keys) {
@@ -77,12 +77,29 @@ const displayObject = (obj, parentElement) => {
  * @param {*} parentElement The HTML element in which to visualise the array
  */
 const displayArray = (arr, parentElement) => {
-  parentElement.appendChild(getMiscElement("["));
-  for (const el of arr) {
-    displayData(el, parentElement);
-    parentElement.appendChild(getMiscElement(","));
+  const arrElement = document.createElement("div");
+  arrElement.style.margin = "0 12px";
+
+  const expandFn = addCollapsible(false, arr.length, arrElement, parentElement);
+
+  arrElement.appendChild(getMiscElement("["));
+  for (let i = 0; i < arr.length; i++) {
+    const el = arr[i];
+
+    arrElement.append(document.createElement("br"));
+    arrElement.append(getArrayIdElement(i));
+    displayData(el, arrElement);
+
+    if (i === arr.length - 1) {
+      arrElement.appendChild(document.createElement("br"));
+    } else {
+      arrElement.appendChild(getMiscElement(","));
+    }
   }
-  parentElement.appendChild(getMiscElement("]"));
+  arrElement.appendChild(getMiscElement("]"));
+
+  parentElement.appendChild(arrElement);
+  expandFn(true);
 };
 
 /**
@@ -95,15 +112,30 @@ const displayValue = (val, parentElement) => {
 };
 
 /**
+ * @param i {Number} Array index for which to create the element
+ * @returns A HTML element for the index of an array
+ */
+const getArrayIdElement = (i) => {
+  const idElement = document.createElement("span");
+  idElement.appendChild(document.createTextNode("\u00A0\u00A0")); // add spaces to indent the elements of the array
+  idElement.appendChild(getMiscElement(" " + i + ": ", true));
+  idElement.style.fontSize = "15px";
+
+  return idElement;
+};
+
+/**
  * Adds a button to expand/collapse a child HTML element
- * @param {*} value The value of the child HTML element
+ * @param {Boolean} isObj Whether an object or an array is being collapsed
+ * @param {Number} numKeys Number of keys that the child element has
  * @param {*} childElement The expanded HTML element
  * @param {*} parentElement The HTML element to which to add the button
  * @returns A function for expanding or collapsing the child element
  */
-const addCollapsible = (childElement, parentElement) => {
-  const collapsedElement = getCollapsedElement();
+const addCollapsible = (isObj, numKeys, childElement, parentElement) => {
+  const collapsedElement = getCollapsedElement(isObj, numKeys);
   const collapsibleElement = getCollapsibleElement();
+  const spaceElement = document.createTextNode("\u00A0\u00A0\u00A0\u00A0");
 
   let el = childElement;
 
@@ -120,13 +152,22 @@ const addCollapsible = (childElement, parentElement) => {
    */
   function toggleChild() {
     parentElement.removeChild(el);
-    el = collapsibleElement.classList.contains(CLASS_EXPANDED)
-      ? childElement
-      : collapsedElement;
+    parentElement.removeChild(collapsibleElement);
+    if (collapsibleElement.classList.contains(CLASS_EXPANDED)) {
+      parentElement.appendChild(spaceElement);
+      parentElement.appendChild(collapsibleElement);
+      el = childElement;
+    } else {
+      parentElement.removeChild(spaceElement);
+      parentElement.appendChild(collapsibleElement);
+      el = collapsedElement;
+    }
+
     parentElement.appendChild(el);
   }
 
   collapsibleElement.addEventListener("click", onClick);
+  parentElement.appendChild(spaceElement);
   parentElement.appendChild(collapsibleElement);
 
   /**
@@ -134,17 +175,46 @@ const addCollapsible = (childElement, parentElement) => {
    * @param {Boolean} shouldExpand Expands the collapsible if true. Collapses it otherwise
    */
   function expandCollapsible(shouldExpand) {
-    if (shouldExpand) {
+    if (
+      shouldExpand &&
+      !collapsibleElement.classList.contains(CLASS_EXPANDED)
+    ) {
       collapsibleElement.classList.add(CLASS_EXPANDED);
-    } else {
+      toggleChild();
+    } else if (
+      !shouldExpand &&
+      collapsibleElement.classList.contains(CLASS_EXPANDED)
+    ) {
       collapsibleElement.classList.remove(CLASS_EXPANDED);
+      toggleChild();
     }
-
-    toggleChild();
   }
 
   allCollapsibles.push(expandCollapsible);
   return expandCollapsible;
+};
+
+/**
+ * @param {Boolean} isObj Whether the element to be collapsed is an obj or an array
+ * @param {Number} numKeys Number of keys that the element to be collapsed has
+ * @returns A HTML element for a collapsed object
+ */
+const getCollapsedElement = (isObj, numKeys) => {
+  const el = document.createElement("div");
+  el.appendChild(document.createTextNode("\u00A0\u00A0\u00A0\u00A0\u00A0"));
+
+  if (isObj) {
+    el.appendChild(getMiscElement("{"));
+    el.appendChild(getMiscElement(ELLIPSIS, true));
+    el.appendChild(getMiscElement("}"));
+  } else {
+    el.appendChild(getMiscElement("["));
+    el.appendChild(getMiscElement(ELLIPSIS, true));
+    el.appendChild(getMiscElement("]"));
+  }
+  el.appendChild(getMiscElement(" (" + numKeys + ")", true));
+
+  return el;
 };
 
 /**
@@ -158,26 +228,14 @@ const getCollapsibleElement = () => {
 };
 
 /**
- * @returns A HTML element for a collapsed object
- */
-const getCollapsedElement = () => {
-  const el = document.createElement("div");
-  el.appendChild(getMiscElement("{"));
-  el.appendChild(getMiscElement(COLLAPSED_OBJ));
-  el.appendChild(getMiscElement("}"));
-  return el;
-};
-
-/**
- * @param {String} data Components of data that is not a key or value eg. a bracket
+ * @param {String} data Components of data that are not a key or value eg. a bracket
+ * @param {Boolean} isAlt Whether an alternate style sbould be applied or not
  * @returns A HTML element for data that is not a key or a value
  */
-const getMiscElement = (data) => {
+const getMiscElement = (data, isAlt = false) => {
   const el = document.createElement("span");
   el.appendChild(document.createTextNode(data));
-  isArrayBracket(data) || data === COLLAPSED_OBJ
-    ? el.classList.add("misc-alt")
-    : el.classList.add("misc");
+  el.classList.add(isAlt ? "misc-alt" : "misc");
 
   return el;
 };
