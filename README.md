@@ -24,7 +24,7 @@ blot.visualise(JSON.stringify(
 ));
 ```
 
-## Functions
+### Functions
 
 <dl>
 <dt><a href="#visualise">visualise(jsonStr)</a></dt>
@@ -40,7 +40,7 @@ blot.visualise(JSON.stringify(
 
 <a name="visualise"></a>
 
-## visualise(jsonStr)
+#### visualise(jsonStr)
 Displays json data in a browser
 
 **Kind**: global function
@@ -51,7 +51,7 @@ Displays json data in a browser
 
 <a name="setPort"></a>
 
-## setPort(customPort) ⇒ <code>Object</code>
+#### setPort(customPort) ⇒ <code>Object</code>
 Sets the port of the server to a custom user-defined port
 
 **Kind**: global function
@@ -63,7 +63,7 @@ Sets the port of the server to a custom user-defined port
 
 <a name="shouldOpenBrowser"></a>
 
-## shouldOpenBrowser(bool) ⇒ <code>Object</code>
+#### shouldOpenBrowser(bool) ⇒ <code>Object</code>
 Configures whether the browser should open automatically
 
 **Kind**: global function
