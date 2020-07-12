@@ -24,7 +24,7 @@ blot.visualise(JSON.stringify(
 ));
 ```
 
-See [redacted](https://htmlpreview.github.io/?https://github.com/arsalanc-v2/blotjson/blob/arsalanc-v2-patch-1/src/lang/nodejs/out/global.html) for detailed documentation.
+See the [documentation](https://htmlpreview.github.io/?https://github.com/arsalanc-v2/blotjson/blob/arsalanc-v2-patch-1/src/lang/nodejs/out/global.html) for detailed documentation.
 
 ## Features
 * JSON is pretty printed
