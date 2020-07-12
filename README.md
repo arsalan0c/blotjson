@@ -24,8 +24,7 @@ blot.visualise(JSON.stringify(
 ));
 ```
 
-See [redacted] for detailed documentation.
-
+See [redacted](./src/lang/nodejs/out/global.html) for detailed documentation.
 
 ## Features
 * JSON is pretty printed
@@ -35,6 +34,7 @@ See [redacted] for detailed documentation.
 ## Why *blotjson*?
 * An external application is not required. There is no need to copy/paste or export your data
 * An arbitrary number of JSON data can be visualised simply
+* Security. Everything is done locally on your own computer.
 
 
 ## Acknowledgements
