@@ -7,6 +7,7 @@
     "test": "jest --forceExit",
     "fixstyle": "npx prettier --write src/*.js && npx eslint *src/index.js --fix",
     "transfer-files": "mkdir -p ../../dist/ && cp src/index.js ../../dist/ && cp src/errorMessages.js ../../dist/ && cp package.json ../../dist/",
+    "generate-docs": "node docs/docGenerator.js && cat docs/header.md >> docs/README.md && cat docs/body.md >> docs/README.md && cat docs/footer.md >> docs/README.md",
     "build": "npx prettier --check src/*.js && npx eslint *src/index.js && npm test"
   },
   "repository": {
@@ -24,7 +25,6 @@
     "websocket": "^1.0.31"
   },
   "devDependencies": {
-    "ws": "^7.3.0",
     "eslint": "^7.1.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.2",
@@ -33,7 +33,9 @@
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
-    "prettier": "2.0.5"
+    "jsdoc-to-markdown": "^6.0.1",
+    "prettier": "2.0.5",
+    "ws": "^7.3.0"
   },
   "husky": {
     "hooks": {
