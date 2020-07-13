@@ -5,7 +5,7 @@ name: Nodejs CD
 
 on:
   push:
-    branches: 
+    branches:
       - master
     paths:
       - "src/lang/nodejs/*"
@@ -24,8 +24,7 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - run: cd src/frontend && npm ci && npm run build
-      - run: cd src/lang/nodejs && npm ci && npm run transfer-files
-      - run: cp src/lang/nodejs/README.md src/dist/
+      - run: cd src/lang/nodejs && npm ci && npm run transfer-files && npm run generate-docs && copy docs/README.md ../../dist/
       - run: npm publish src/dist/
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} 
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
