@@ -1,4 +1,4 @@
-![Alt text](../../../logo_light.svg)
+![Alt text](./images/logo_light.svg)
 # blotjson
 
 **Blot:**
