@@ -25,7 +25,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: cd src/frontend && npm ci && npm run build
       - run: cd src/lang/nodejs && npm ci && npm run transfer-files && npm run generate-docs && copy docs/README.md ../../dist/
-      - run: rm README.md && cat docs/main_header.md >> README.md && cat docs/common_header.md >> README.md && cat docs/main_body.md >> README.md && cat docs/common_footer.md >> README.md
       - run: npm publish src/dist/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
