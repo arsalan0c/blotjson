@@ -4,7 +4,7 @@
   "description": "Frontend for the visualisation of JSON.",
   "main": "index.html",
   "scripts": {
-    "clean": "rm -r --force ../dist/",
+    "clean": "rm -rf ../dist/",
     "checks": "npx prettier --write src/js/*.js && npx eslint src/js/*.js --fix",
     "build": "npm run clean && npm run checks && node inline.js && cp -r src/images ../dist/"
   },
