@@ -1,0 +1,29 @@
+{
+  "name": "blotjson",
+  "version": "0.1.0",
+  "description": "Frontend for the visualisation of JSON.",
+  "main": "index.html",
+  "scripts": {
+    "clean": "rm -rf ../dist/",
+    "checks": "npx prettier --write src/js/*.js && npx eslint src/js/*.js --fix",
+    "build": "npm run clean && npm run checks && node inline.js && cp -r src/images ../dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arsalanc-v2/blotjson.git"
+  },
+  "author": "Umer Siddiqui",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arsalanc-v2/blotjson/issues"
+  },
+  "homepage": "https://github.com/arsalanc-v2/blotjson#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.3.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "inliner": "^1.13.1",
+    "prettier": "^2.0.5"
+  }
+}
