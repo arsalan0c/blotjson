@@ -24,54 +24,7 @@ blot.visualise(JSON.stringify(
 ));
 ```
 
-### Functions
-
-<dl>
-<dt><a href="#visualise">visualise(jsonStr)</a></dt>
-<dd><p>Displays json data in a browser</p>
-</dd>
-<dt><a href="#setPort">setPort(customPort)</a> ⇒ <code>Object</code></dt>
-<dd><p>Sets the port of the server to a custom user-defined port</p>
-</dd>
-<dt><a href="#shouldOpenBrowser">shouldOpenBrowser(bool)</a> ⇒ <code>Object</code></dt>
-<dd><p>Configures whether the browser should open automatically</p>
-</dd>
-</dl>
-
-<a name="visualise"></a>
-
-### visualise(jsonStr)
-Displays json data in a browser
-
-**Kind**: global function
-
-| Param | Type | Description |
-| --- | --- | --- |
-| jsonStr | <code>String</code> | Stringified JSON data to be viewed |
-
-<a name="setPort"></a>
-
-### setPort(customPort) ⇒ <code>Object</code>
-Sets the port of the server to a custom user-defined port
-
-**Kind**: global function
-**Returns**: <code>Object</code> - Object whose keys point to the blot functions, to allow function chaining
-
-| Param | Type | Description |
-| --- | --- | --- |
-| customPort | <code>Number</code> | Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user |
-
-<a name="shouldOpenBrowser"></a>
-
-### shouldOpenBrowser(bool) ⇒ <code>Object</code>
-Configures whether the browser should open automatically
-
-**Kind**: global function
-**Returns**: <code>Object</code> - Object whose keys point to the blot functions, to allow function chaining
-
-| Param | Default | Description |
-| --- | --- | --- |
-| bool | <code>true</code> | Whether the browser should open automatically |
+For further details on how to use blotjson on Node.js, go [here](./src/lang/nodejs/README.md)
 
 ## Features
 * JSON is pretty printed
