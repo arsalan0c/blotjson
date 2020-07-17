@@ -10,7 +10,7 @@ const CLASS_COLLAPSED = "collapsed";
 const host = window.location.host;
 const allCollapsibles = []; // stores all collapsible HTML elements for expand/collapse all functionality
 
-const webSocket = new WebSocket("ws://" + host);
+const webSocket = new WebSocket("ws://" + host + "/ws");
 webSocket.onmessage = (json) => {
   displayElement(JSON.parse(json.data));
 
