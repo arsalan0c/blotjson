@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/browser"
 )
 
-// Frontend file paths
+// frontend file paths
 const htmlFilePath string = "./dist/index.html"
 const darkLogoPath string = "./dist/images/logo_dark.svg"
 const lightLogoPath string = "./dist/images/logo_light.svg"
@@ -24,6 +24,8 @@ const darkLogoURL string = "/images/logo_dark.svg"
 
 const invalidPortNumberError string = "Invalid port number"
 const invalidJSONError string = "Visualise must take in a valid JSON value"
+
+// networking
 
 const host = "localhost"
 const minPort int = 1024
