@@ -110,6 +110,11 @@ func setupServer() {
 	http.HandleFunc(darkLogoURL, serveDarkLogo)
 	http.HandleFunc(htmlURL, serveHTML)
 
+	if openBrowser {
+		browser.OpenURL(fmt.Sprintf("http://%s:%d", host, port))
+	}
+
+	fmt.Println("Server started on port " + strconv.Itoa(port))
 	http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), nil)
 }
 
@@ -146,11 +151,7 @@ func upgradeConnection(w http.ResponseWriter, r *http.Request) *websocket.Conn {
 }
 
 func serveHTML(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Server started on port " + strconv.Itoa(port))
 	http.ServeFile(w, r, htmlFilePath)
-	if openBrowser {
-		browser.OpenURL(fmt.Sprintf("http://%s:%d", host, port))
-	}
 }
 
 func serveLightLogo(w http.ResponseWriter, r *http.Request) {
