@@ -65,7 +65,7 @@ function visualise(jsonStr) {
 /**
  * Sets the port of the server to a custom user-defined port
  * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
- * @returns {Object} Object whose keys point to the blot functions
+ * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function setPort(customPort) {
   validatePort(customPort);
@@ -76,7 +76,7 @@ function setPort(customPort) {
 /**
  * Configures whether the browser should open automatically
  * @param bool Whether the browser should open automatically
- * @returns {Object} Object whose keys point to the blot functions
+ * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function shouldOpenBrowser(bool = true) {
   openBrowser = bool;
