@@ -220,30 +220,45 @@ describe('Port number cases', () => {
 describe('Test manual opening function', () => {
   test('Integer', () => {
     const testData = 1;
-    performErrorTest({ openManually: testData }, errors.NON_BOOLEAN_ARGUMENT_ERROR);
+    performErrorTest(
+      { openManually: testData },
+      errors.NON_BOOLEAN_ARGUMENT_ERROR
+    );
   });
 
   test('Float', () => {
     const testData = Math.PI;
-    performErrorTest({ openManually: testData }, errors.NON_BOOLEAN_ARGUMENT_ERROR);
+    performErrorTest(
+      { openManually: testData },
+      errors.NON_BOOLEAN_ARGUMENT_ERROR
+    );
   });
 
   test('Object', () => {
     const testData = {
       test: 'a quick brown fox'
     };
-    performErrorTest({ openManually: testData }, errors.NON_BOOLEAN_ARGUMENT_ERROR);
+    performErrorTest(
+      { openManually: testData },
+      errors.NON_BOOLEAN_ARGUMENT_ERROR
+    );
   });
 
   test('Function', () => {
     const testData = () => {};
-    performErrorTest({ openManually: testData }, errors.NON_BOOLEAN_ARGUMENT_ERROR);
+    performErrorTest(
+      { openManually: testData },
+      errors.NON_BOOLEAN_ARGUMENT_ERROR
+    );
   });
 
   test('String', () => {
     const testData =
       'The more I think about language, the more it amazes me that people ever understand each other at all.';
-    performErrorTest({ openManually: testData }, errors.NON_BOOLEAN_ARGUMENT_ERROR);
+    performErrorTest(
+      { openManually: testData },
+      errors.NON_BOOLEAN_ARGUMENT_ERROR
+    );
   });
 });
 
