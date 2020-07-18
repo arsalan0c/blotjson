@@ -64,7 +64,7 @@ function visualise(jsonStr) {
 
 /**
  * Sets the port of the server to a custom user-defined port
- * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
+ * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user. Port value must be at least 1024
  * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function setPort(customPort) {
@@ -164,9 +164,9 @@ function renderFile(response, relativePath, contentType) {
 }
 
 /**
- * Validates that the argument passed to visualise is a valid JSON string
+ * Validates that the argument passed to it is a valid JSON text
  * @param {*} jsonStr Argument passed by user to visualise
- * @throws Throws error if the argument is an invalid JSON value
+ * @throws Throws error if the argument is an invalid JSON text
  */
 function validateJSON(jsonStr) {
   try {
@@ -180,14 +180,14 @@ function validateJSON(jsonStr) {
 }
 
 /**
- * Validates that the port passed to setPort is a valid port number
+ * Validates that the argument passed to it is a valid port number
  * @param {Number} port Port number to be validated
  * @throws Throws error if the argument is an invalid port number
  */
 function validatePort(port) {
   if (!Number.isInteger(port)) {
     throw new Error(errors.NON_INTEGER_PORT_ERROR);
-  } else if (port <= 0 || port >= 65536) {
+} else if (port <= 1204 || port >= 65536) {
     throw new Error(errors.INVALID_PORT_NUMBER_ERROR);
   }
 }

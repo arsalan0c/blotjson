@@ -132,7 +132,7 @@ describe('Standard JSON tests', () => {
       done();
     };
 
-    fs.readFile('./src/bigTest.json', 'utf8', (err, data) => {
+    fs.readFile('../../../../test/bigTest.json', 'utf8', (err, data) => {
       if (err) {
         done.fail(err);
       } else {
