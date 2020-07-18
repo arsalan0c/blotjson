@@ -79,6 +79,9 @@ function setPort(customPort) {
  * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function shouldOpenBrowser(bool = true) {
+  if (typeof bool !== 'boolean') {
+    throw new Error(errors.NON_BOOLEAN_ARGUMENT_ERROR);
+  }
   openBrowser = bool;
   return blotFns;
 }

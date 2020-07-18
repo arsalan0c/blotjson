@@ -217,13 +217,43 @@ describe('Port number cases', () => {
   });
 });
 
+describe('Test manual opening function', () => {
+  test('Integer', () => {
+    const testData = 1;
+    performErrorTest({ openManually: testData }, NON_BOOLEAN_ARGUMENT_ERROR);
+  });
+
+  test('Float', () => {
+    const testData = Math.PI;
+    performErrorTest({ openManually: testData }, NON_BOOLEAN_ARGUMENT_ERROR);
+  });
+
+  test('Object', () => {
+    const testData = {
+      test: 'a quick brown fox'
+    };
+    performErrorTest({ openManually: testData }, NON_BOOLEAN_ARGUMENT_ERROR);
+  });
+
+  test('Function', () => {
+    const testData = () => {};
+    performErrorTest({ openManually: testData }, NON_BOOLEAN_ARGUMENT_ERROR);
+  });
+
+  test('String', () => {
+    const testData =
+      'The more I think about language, the more it amazes me that people ever understand each other at all.';
+    performErrorTest({ openManually: testData }, NON_BOOLEAN_ARGUMENT_ERROR);
+  });
+});
+
 /*****
  * AUXILLIARY CONSTANTS AND FUNCTIONS
  ******/
 
 /**
  * Performs tests that throw errors
- * @param {Object} data Object that contains the data. Object is expected to have at least a message key or a port key
+ * @param {Object} data Object that contains the data. Object is expected to have at least one of the following keys: message, port, openManually
  * @param {String} errorMessage The error message that is expected to be thrown
  */
 function performErrorTest(data, errorMessage) {
@@ -232,6 +262,11 @@ function performErrorTest(data, errorMessage) {
   }
   if (data.port) {
     expect(() => blot.setPort(data.port)).toThrow(errorMessage);
+  }
+  if (data.openManually) {
+    expect(() => blot.shouldOpenBrowser(data.openManually)).toThrow(
+      errorMessage
+    );
   }
 }
 
