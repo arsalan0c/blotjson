@@ -1,0 +1,8 @@
+frontend:
+- src/frontend/*
+
+nodejs:
+- src/lang/nodejs/*
+
+golang:
+- src/lang/go/*

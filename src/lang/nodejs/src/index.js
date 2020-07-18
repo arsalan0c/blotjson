@@ -65,7 +65,7 @@ function visualise(jsonStr) {
 /**
  * Sets the port of the server to a custom user-defined port
  * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
- * @returns {Object} Object whose keys point to the blot functions
+ * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function setPort(customPort) {
   validatePort(customPort);
@@ -76,7 +76,7 @@ function setPort(customPort) {
 /**
  * Configures whether the browser should open automatically
  * @param bool Whether the browser should open automatically
- * @returns {Object} Object whose keys point to the blot functions
+ * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function shouldOpenBrowser(bool = true) {
   openBrowser = bool;
@@ -84,6 +84,7 @@ function shouldOpenBrowser(bool = true) {
 }
 
 /**
+ * @ignore
  * Creates and sets up a server which listens on the specified port
  * @param {Number} port Port on which the server listens
  */
@@ -119,6 +120,7 @@ function startServer(port) {
 }
 
 /**
+ * @ignore
  * Sets up the websocket on the server end. Defines event handlers for web socket connection.
  * @param {*} jsonStr json data passed as argument to first visualise call
  */
@@ -140,6 +142,7 @@ function setWebsocket() {
 }
 
 /**
+ * @ignore
  * Renders a file as part of a response to a request
  * @param {*} response Object representing the response
  * @param {String} relativePath Relative path to the file to be rendered
@@ -164,6 +167,7 @@ function renderFile(response, relativePath, contentType) {
 }
 
 /**
+ * @ignore
  * Validates that the argument passed to visualise is a valid JSON string
  * @param {*} jsonStr Argument passed by user to visualise
  * @throws Throws error if the argument is an invalid JSON value
@@ -180,6 +184,7 @@ function validateJSON(jsonStr) {
 }
 
 /**
+ * @ignore
  * Validates that the port passed to setPort is a valid port number
  * @param {Number} port Port number to be validated
  * @throws Throws error if the argument is an invalid port number
