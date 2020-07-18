@@ -187,7 +187,7 @@ function validateJSON(jsonStr) {
 function validatePort(port) {
   if (!Number.isInteger(port)) {
     throw new Error(errors.NON_INTEGER_PORT_ERROR);
-} else if (port <= 1204 || port >= 65536) {
+  } else if (port <= 1204 || port >= 65536) {
     throw new Error(errors.INVALID_PORT_NUMBER_ERROR);
   }
 }
