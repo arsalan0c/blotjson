@@ -167,7 +167,7 @@ function renderFile(response, relativePath, contentType) {
 }
 
 /**
- * Validates that the argument passed to it is a valid JSON value
+ * Validates that the argument is a valid JSON value
  * @param {*} jsonStr Argument passed by user to visualise
  * @throws Throws error if the argument is an invalid JSON value
  */
@@ -183,7 +183,7 @@ function validateJSON(jsonStr) {
 }
 
 /**
- * Validates that the argument passed to it is a valid port number
+ * Validates that the argument is a valid port number
  * @param {Number} port Port number to be validated
  * @throws Throws error if the argument is an invalid port number
  */
