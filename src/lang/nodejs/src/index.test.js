@@ -267,7 +267,7 @@ describe('Test manual opening function', () => {
  ******/
 
 /**
- * Performs tests that throw errors from the visualise, setPort, and shouldOpenBrowser function tests.
+ * Performs tests that throw errors for the visualise, setPort, and shouldOpenBrowser function tests.
  * @param {Object} data Object that contains the data. Object is expected to have at least one of the following keys: message, port, openManually
  * @param {String} errorMessage The error message that is expected to be thrown
  */
