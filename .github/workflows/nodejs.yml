@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v1
       - uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: npm ci
       - run: npm run build
