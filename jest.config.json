@@ -1,0 +1,6 @@
+{
+    "name": "blot",
+    "jest": {
+        "verbose": true
+    }
+}
