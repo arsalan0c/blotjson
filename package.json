@@ -1,7 +1,7 @@
 {
     "name": "blotjson",
     "version": "0.1.0",
-    "description": "A module to simplify visualisation of JSON.",
+    "description": "Multi-language libraries to simplify visualisation of JSON.",
     "main": "index.js",
     "directories": {
       "doc": "docs"
