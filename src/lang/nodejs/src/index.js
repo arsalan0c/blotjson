@@ -167,15 +167,12 @@ function renderFile(response, relativePath, contentType) {
 }
 
 /**
- * Validates that the argument is a valid JSON value
+ * Validates that the argument is a valid JSON text or JSON value
  * @param {*} jsonStr Argument passed by user to visualise
  * @throws Throws error if the argument is an invalid JSON value
  */
 function validateJSON(jsonStr) {
   try {
-    if (!jsonStr) {
-      throw new Error();
-    }
     JSON.parse(jsonStr);
   } catch (e) {
     throw new Error(errors.INVALID_JSON_ERROR);
