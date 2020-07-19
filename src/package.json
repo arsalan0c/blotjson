@@ -1,0 +1,30 @@
+{
+    "name": "blotjson",
+    "version": "0.1.0",
+    "description": "A module to simplify visualisation of JSON.",
+    "main": "index.js",
+    "directories": {
+      "doc": "docs"
+    },
+    "scripts": {
+      "generate-main-readme": "rm README.md && cat docs/main_header.md >> README.md && cat docs/common_header.md >> README.md && cat docs/main_body.md >> README.md && cat docs/common_footer.md >> README.md"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/arsalanc-v2/blotjson.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/arsalanc-v2/blotjson/issues"
+    },
+    "homepage": "https://github.com/arsalanc-v2/blotjson#readme",
+    "devDependencies": {
+      "husky": "^4.2.5"
+    },
+    "husky": {
+      "hooks": {
+      "pre-commit": "npm run generate-main-readme && git add README.md"
+      }
+    }
+  }
