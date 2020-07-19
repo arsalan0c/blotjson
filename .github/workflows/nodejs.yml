@@ -22,9 +22,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
+      - run: npm ci
+      - run: npm run build
       - uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: "src/lang/nodejs/coverage/lcov.info"
-      - run: npm ci
-      - run: npm run build
