@@ -3,4 +3,3 @@
 
 
 *blotjson* displays [JSON](https://www.json.org/json-en.html) in a browser, directly from backend application code to make it easier to make sense of API responses. This is especially if they are not well documented.
-
