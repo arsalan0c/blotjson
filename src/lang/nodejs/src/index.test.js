@@ -4,6 +4,8 @@ const WebSocketClient = require('ws');
 const fs = require('fs');
 let ws = null;
 
+const BIG_JSON = '../../test/bigTest.json';
+
 beforeAll(() => {
   blot.setPort(3000).shouldOpenBrowser(false);
   ws = new WebSocketClient('ws://localhost:3000');
@@ -101,7 +103,7 @@ describe('Standard JSON tests', () => {
       done();
     };
 
-    fs.readFile('../../../test/bigTest.json', 'utf8', (err, data) => {
+    fs.readFile(BIG_JSON, 'utf8', (err, data) => {
       if (err) {
         done.fail(err);
       } else {
