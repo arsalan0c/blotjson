@@ -167,9 +167,9 @@ function renderFile(response, relativePath, contentType) {
 }
 
 /**
- * Validates that the argument passed to it is a valid JSON text
+ * Validates that the argument passed to it is a valid JSON value
  * @param {*} jsonStr Argument passed by user to visualise
- * @throws Throws error if the argument is an invalid JSON text
+ * @throws Throws error if the argument is an invalid JSON value
  */
 function validateJSON(jsonStr) {
   try {
@@ -190,7 +190,7 @@ function validateJSON(jsonStr) {
 function validatePort(port) {
   if (!Number.isInteger(port)) {
     throw new Error(errors.NON_INTEGER_PORT_ERROR);
-  } else if (port <= 1204 || port >= 65536) {
+  } else if (port <= 1024 || port >= 65536) {
     throw new Error(errors.INVALID_PORT_NUMBER_ERROR);
   }
 }
