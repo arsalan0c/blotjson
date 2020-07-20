@@ -8,7 +8,7 @@
     "test-coverage": "jest --coverage --forceExit && cat ./coverage/lcov.info | coveralls",
     "fixstyle": "npx prettier --write src/*.js && npx eslint *src/index.js --fix",
     "transfer-files": "mkdir -p ../../dist/ && cp src/index.js ../../dist/ && cp src/errorMessages.js ../../dist/ && cp package.json ../../dist/",
-    "generate-docs": "node docs/docGenerator.js && cat docs/nodejs_header.md >> docs/README.md && cat ../../../docs/common_header.md >> docs/README.md && cat docs/body.md >> docs/README.md && cat ../../../common_footer.md >> docs/README.md",
+    "generate-docs": "node docs/docGenerator.js && cat docs/nodejs_header.md >> docs/README.md && cat ../../../docs/common_header.md >> docs/README.md && cat docs/body.md >> docs/README.md && cat ../../../docs/common_footer.md >> docs/README.md",
     "build": "npx prettier --check src/*.js && npx eslint *src/index.js && npm run test-coverage"
   },
   "repository": {
@@ -41,7 +41,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run fixstyle && npm run generate-main-readme && git add ../../../README.md"
+      "pre-commit": "npm run fixstyle && npm run generate-docs && git add docs/README.md"
     }
   }
 }
