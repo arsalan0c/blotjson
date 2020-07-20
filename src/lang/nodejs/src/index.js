@@ -15,7 +15,6 @@ const HTML_URL = '/';
 const LIGHT_LOGO_URL = '/images/logo_light.svg';
 const DARK_LOGO_URL = '/images/logo_dark.svg';
 
-
 /* NETWORKING VARIABLES */
 
 const MIN_PORT = 1024;
