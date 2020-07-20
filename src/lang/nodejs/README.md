@@ -1,29 +1,20 @@
-![Alt text](../../../logo_light.svg) 
-# blotjson
+![Nodejs CD](https://github.com/arsalanc-v2/blotjson/workflows/Nodejs%20CD/badge.svg)
+![Nodejs CI Build](https://github.com/arsalanc-v2/blotjson/workflows/Nodejs%20CI%20Build/badge.svg)
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/arsalanc-v2/blotjson/master.svg)](https://codecov.io/gh/arsalanc-v2/blotjson/)
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-dae1e7.svg"></a>
+<p align=center><img src=../../../logo_light.svg></p>
 
-**Blot:**
-> a procedure in which proteins or nucleic acids separated on a gel are transferred directly to an immobilizing medium for identification.
+<p align=center><b>blotjson</b></p>
 
+<p align=center><i>blotjson</i> is a tool to help you make sense of API responses by displaying <a href="https://www.json.org/json-en.html">JSON</a> in a browser, <br />directly from backend code where the JSON is received</p>
 
-*blotjson* displays [JSON](https://www.json.org/json-en.html) in a browser, directly from backend application code to make it easier to make sense of API responses. This is especially if they are not well documented.
+---
 
-
-## Basic Usage
-
-**Installation**
-```
-npm i --save-dev blotjson
-```
-**Example**
-```js
-const blot = require('blotjson');
-
-blot.visualise(JSON.stringify(
-  ['foo', {'bar': ('baz', null, 1.0, 2)}]
-));
-```
-
-### Functions
+## Why *blotjson*?
+* There is no need to copy/paste or export your data
+* Everything is done locally on your own computer
+* An arbitrary number of JSON datum can be easily visualised
+## Functions
 
 <dl>
 <dt><a href="#visualise">visualise(jsonStr)</a></dt>
@@ -35,14 +26,29 @@ blot.visualise(JSON.stringify(
 <dt><a href="#shouldOpenBrowser">shouldOpenBrowser(bool)</a> ⇒ <code>Object</code></dt>
 <dd><p>Configures whether the browser should open automatically</p>
 </dd>
+<dt><a href="#startServer">startServer(port)</a></dt>
+<dd><p>Creates and sets up a server which listens on the specified port</p>
+</dd>
+<dt><a href="#setWebsocket">setWebsocket(jsonStr)</a></dt>
+<dd><p>Sets up the websocket on the server end. Defines event handlers for web socket connection.</p>
+</dd>
+<dt><a href="#renderFile">renderFile(response, relativePath, contentType)</a></dt>
+<dd><p>Renders a file as part of a response to a request</p>
+</dd>
+<dt><a href="#validateJSON">validateJSON(jsonStr)</a></dt>
+<dd><p>Validates that the argument is a valid JSON text or JSON value</p>
+</dd>
+<dt><a href="#validatePort">validatePort(port)</a></dt>
+<dd><p>Validates that the argument is a valid port number</p>
+</dd>
 </dl>
 
 <a name="visualise"></a>
 
-### visualise(jsonStr)
+## visualise(jsonStr)
 Displays json data in a browser
 
-**Kind**: global function
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -50,39 +56,94 @@ Displays json data in a browser
 
 <a name="setPort"></a>
 
-### setPort(customPort) ⇒ <code>Object</code>
+## setPort(customPort) ⇒ <code>Object</code>
 Sets the port of the server to a custom user-defined port
 
-**Kind**: global function
-**Returns**: <code>Object</code> - Object whose keys point to the blot functions, to allow function chaining
+**Kind**: global function  
+**Returns**: <code>Object</code> - Object whose keys point to the blot functions, to allow function chaining  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| customPort | <code>Number</code> | Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user |
+| customPort | <code>Number</code> | Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user. Port value must be at least 1024 |
 
 <a name="shouldOpenBrowser"></a>
 
-### shouldOpenBrowser(bool) ⇒ <code>Object</code>
+## shouldOpenBrowser(bool) ⇒ <code>Object</code>
 Configures whether the browser should open automatically
 
-**Kind**: global function
-**Returns**: <code>Object</code> - Object whose keys point to the blot functions, to allow function chaining
+**Kind**: global function  
+**Returns**: <code>Object</code> - Object whose keys point to the blot functions, to allow function chaining  
 
 | Param | Default | Description |
 | --- | --- | --- |
 | bool | <code>true</code> | Whether the browser should open automatically |
 
-## Features
-* JSON is pretty printed
-* objects and arrays can be collapsed for simpler exploration
-* supports dark mode
+<a name="startServer"></a>
 
-## Why *blotjson*?
-* An external application is not required. There is no need to copy/paste or export your data
-* An arbitrary number of JSON data can be visualised simply
-* Security. Everything is done locally on your own computer.
+## startServer(port)
+Creates and sets up a server which listens on the specified port
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| port | <code>Number</code> | Port on which the server listens |
+
+<a name="setWebsocket"></a>
+
+## setWebsocket(jsonStr)
+Sets up the websocket on the server end. Defines event handlers for web socket connection.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| jsonStr | <code>\*</code> | json data passed as argument to first visualise call |
+
+<a name="renderFile"></a>
+
+## renderFile(response, relativePath, contentType)
+Renders a file as part of a response to a request
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| response | <code>\*</code> | Object representing the response |
+| relativePath | <code>String</code> | Relative path to the file to be rendered |
+| contentType | <code>String</code> | The media type of the file |
+
+<a name="validateJSON"></a>
+
+## validateJSON(jsonStr)
+Validates that the argument is a valid JSON text or JSON value
+
+**Kind**: global function  
+**Throws**:
+
+- Throws error if the argument is an invalid JSON value
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| jsonStr | <code>\*</code> | Argument passed by user to visualise |
+
+<a name="validatePort"></a>
+
+## validatePort(port)
+Validates that the argument is a valid port number
+
+**Kind**: global function  
+**Throws**:
+
+- Throws error if the argument is an invalid port number
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| port | <code>Number</code> | Port number to be validated |
 
 
 ## Acknowledgements
 
-The design of displaying the data is in part inspired by [Swagger](https://swagger.io) 
+The design of displaying the data is in part inspired by [Swagger](https://swagger.io)

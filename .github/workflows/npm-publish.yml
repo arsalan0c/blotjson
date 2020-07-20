@@ -23,9 +23,6 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }
       - run: cd src/frontend && npm ci && npm run build
       - run: cd src/lang/nodejs && npm ci && npm run transfer-files && npm run generate-docs && copy docs/README.md ../../dist/
       - run: npm publish src/dist/

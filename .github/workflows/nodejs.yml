@@ -4,9 +4,11 @@ name: Nodejs CI Build
 on:
   push:
     paths:
+      - ".github/workflows/nodejs.yml"
       - "src/lang/nodejs/*"
   pull_request:
     paths:
+      - ".github/workflows/nodejs.yml"
       - "src/lang/nodejs/*"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -20,9 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-      - uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }
-
       - run: npm ci
       - run: npm run build
+      - uses: codecov/codecov-action@v1

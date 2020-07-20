@@ -1,4 +1,4 @@
-node_modules/
+node_modules/ 
 
 # unnecesary files made by vim
 *gitignore*
