@@ -151,6 +151,7 @@ function setWebsocket() {
  * @param {*} response Object representing the response
  * @param {String} relativePath Relative path to the file to be rendered
  * @param {String} contentType The media type of the file
+ * @ignore
  */
 function renderFile(response, relativePath, contentType) {
   const absPath = path.resolve(__dirname, relativePath);
