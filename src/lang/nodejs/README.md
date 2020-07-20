@@ -1,8 +1,8 @@
 ![Nodejs CD](https://github.com/arsalanc-v2/blotjson/workflows/Nodejs%20CD/badge.svg)
 ![Nodejs CI Build](https://github.com/arsalanc-v2/blotjson/workflows/Nodejs%20CI%20Build/badge.svg)
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-dae1e7.svg"></a>
+<p align=center><img src=../../../logo_light.svg></p>
 
-<p align=center><img src=./logo_light.svg></p>
 <p align=center><b>blotjson</b></p>
 
 <p align=center><i>blotjson</i> is a tool to help you make sense of API responses by displaying <a href="https://www.json.org/json-en.html">JSON</a> in a browser, <br />directly from backend code where the JSON is received</p>
