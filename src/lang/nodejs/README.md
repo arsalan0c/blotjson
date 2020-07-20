@@ -31,9 +31,6 @@
 <dt><a href="#shouldOpenBrowser">shouldOpenBrowser(bool)</a> ⇒ <code>Object</code></dt>
 <dd><p>Configures whether the browser should open automatically</p>
 </dd>
-<dt><a href="#renderFile">renderFile(response, relativePath, contentType)</a></dt>
-<dd><p>Renders a file as part of a response to a request</p>
-</dd>
 </dl>
 
 <a name="visualise"></a>
@@ -70,19 +67,6 @@ Configures whether the browser should open automatically
 | Param | Default | Description |
 | --- | --- | --- |
 | bool | <code>true</code> | Whether the browser should open automatically |
-
-<a name="renderFile"></a>
-
-## renderFile(response, relativePath, contentType)
-Renders a file as part of a response to a request
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| response | <code>\*</code> | Object representing the response |
-| relativePath | <code>String</code> | Relative path to the file to be rendered |
-| contentType | <code>String</code> | The media type of the file |
 
 
 ## Acknowledgements
