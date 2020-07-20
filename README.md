@@ -7,10 +7,11 @@
 
 ---
 
-## Why *blotjson*?
+### Why *blotjson*?
 * There is no need to copy/paste or export your data
 * Everything is done locally on your own computer
-* An arbitrary number of JSON datum can be easily visualised## Basic Usage
+* An arbitrary number of JSON datum can be easily visualised
+## Basic Usage
 
 ### Node.js
 **Installation**
@@ -26,6 +27,8 @@ blot.visualise(JSON.stringify(
 ));
 ```
 
-For further details on how to use blotjson on Node.js, go [here](./src/lang/nodejs/README.md)## Acknowledgements
+For further details on how to use blotjson on Node.js, go [here](./src/lang/nodejs/README.md)
+
+### Acknowledgements
 
 The design of displaying the data is in part inspired by [Swagger](https://swagger.io)
