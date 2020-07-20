@@ -1,6 +1,6 @@
 {
   "name": "blotjson",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A module to simplify visualisation of JSON.",
   "keywords": [
     "JSON",

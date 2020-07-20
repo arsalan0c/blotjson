@@ -7,7 +7,6 @@ const errors = require('./errorMessages.js');
 
 /* CONSTANTS */
 
-// Frontend file paths
 const HTML_FILE_PATH = './index.html';
 const DARK_LOGO_PATH = './images/logo_dark.svg';
 const LIGHT_LOGO_PATH = './images/logo_light.svg';
@@ -16,10 +15,12 @@ const HTML_URL = '/';
 const LIGHT_LOGO_URL = '/images/logo_light.svg';
 const DARK_LOGO_URL = '/images/logo_dark.svg';
 
+/* NETWORKING VARIABLES */
+
+const MIN_PORT = 1024;
+const MAX_PORT = 65535;
 const DEFAULT_PORT = 9101;
 const HOST = 'http://127.0.0.1';
-
-/* NETWORKING VARIABLES */
 
 let httpServer = null;
 let connection = null; // refers to the web socket connection to the client once connection is established
@@ -89,6 +90,7 @@ function shouldOpenBrowser(bool = true) {
 /**
  * Creates and sets up a server which listens on the specified port
  * @param {Number} port Port on which the server listens
+ * @ignore
  */
 function startServer(port) {
   httpServer = http.createServer((req, res) => {
@@ -124,6 +126,7 @@ function startServer(port) {
 /**
  * Sets up the websocket on the server end. Defines event handlers for web socket connection.
  * @param {*} jsonStr json data passed as argument to first visualise call
+ * @ignore
  */
 function setWebsocket() {
   const webSocket = new WebSocketServer({
@@ -147,6 +150,7 @@ function setWebsocket() {
  * @param {*} response Object representing the response
  * @param {String} relativePath Relative path to the file to be rendered
  * @param {String} contentType The media type of the file
+ * @ignore
  */
 function renderFile(response, relativePath, contentType) {
   const absPath = path.resolve(__dirname, relativePath);
@@ -170,6 +174,7 @@ function renderFile(response, relativePath, contentType) {
  * Validates that the argument is a valid JSON text or JSON value
  * @param {*} jsonStr Argument passed by user to visualise
  * @throws Throws error if the argument is an invalid JSON value
+ * @ignore
  */
 function validateJSON(jsonStr) {
   try {
@@ -183,11 +188,12 @@ function validateJSON(jsonStr) {
  * Validates that the argument is a valid port number
  * @param {Number} port Port number to be validated
  * @throws Throws error if the argument is an invalid port number
+ * @ignore
  */
 function validatePort(port) {
   if (!Number.isInteger(port)) {
     throw new Error(errors.NON_INTEGER_PORT_ERROR);
-  } else if (port <= 1024 || port >= 65536) {
+  } else if (port < MIN_PORT || port > MAX_PORT) {
     throw new Error(errors.INVALID_PORT_NUMBER_ERROR);
   }
 }

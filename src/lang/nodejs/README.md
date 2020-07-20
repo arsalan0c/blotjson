@@ -1,15 +1,17 @@
 <p align=center>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-dae1e7.svg"></a>
   <a><img src=https://github.com/arsalanc-v2/blotjson/workflows/Nodejs%20CD/badge.svg></a>
   <a><img src=https://github.com/arsalanc-v2/blotjson/workflows/Nodejs%20CI%20Build/badge.svg></a>
   <a><img src=https://img.shields.io/codecov/c/github/arsalanc-v2/blotjson/master.svg></a>
   <a href="https://codeclimate.com/github/arsalanc-v2/blotjson/maintainability"><img src="https://api.codeclimate.com/v1/badges/c9aeea9413e7fd863224/maintainability" /></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-dae1e7.svg"></a>
+  <img src="https://img.shields.io/npm/v/blotjson">
+  <img src="https://img.shields.io/bundlephobia/min/blotjson">
 </p>
 <p align=center><img src="https://raw.githubusercontent.com/arsalanc-v2/blotjson/master/logo_light.svg"></p>
 
 <p align=center><b>blotjson</b></p>
 
-<p align=center><i>blotjson</i> is a tool to help you make sense of API responses by displaying <i>JSON</i> in a browser, <br />directly from backend code where the <i>JSON</i> is received</p>
+<p align=center><i>blotjson</i> is a tool to help you make sense of API responses by displaying JSON in a browser, <br />directly from backend code where the JSON< is received</p>
 
 ---
 
@@ -28,21 +30,6 @@
 </dd>
 <dt><a href="#shouldOpenBrowser">shouldOpenBrowser(bool)</a> ⇒ <code>Object</code></dt>
 <dd><p>Configures whether the browser should open automatically</p>
-</dd>
-<dt><a href="#startServer">startServer(port)</a></dt>
-<dd><p>Creates and sets up a server which listens on the specified port</p>
-</dd>
-<dt><a href="#setWebsocket">setWebsocket(jsonStr)</a></dt>
-<dd><p>Sets up the websocket on the server end. Defines event handlers for web socket connection.</p>
-</dd>
-<dt><a href="#renderFile">renderFile(response, relativePath, contentType)</a></dt>
-<dd><p>Renders a file as part of a response to a request</p>
-</dd>
-<dt><a href="#validateJSON">validateJSON(jsonStr)</a></dt>
-<dd><p>Validates that the argument is a valid JSON text or JSON value</p>
-</dd>
-<dt><a href="#validatePort">validatePort(port)</a></dt>
-<dd><p>Validates that the argument is a valid port number</p>
 </dd>
 </dl>
 
@@ -80,71 +67,6 @@ Configures whether the browser should open automatically
 | Param | Default | Description |
 | --- | --- | --- |
 | bool | <code>true</code> | Whether the browser should open automatically |
-
-<a name="startServer"></a>
-
-## startServer(port)
-Creates and sets up a server which listens on the specified port
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| port | <code>Number</code> | Port on which the server listens |
-
-<a name="setWebsocket"></a>
-
-## setWebsocket(jsonStr)
-Sets up the websocket on the server end. Defines event handlers for web socket connection.
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| jsonStr | <code>\*</code> | json data passed as argument to first visualise call |
-
-<a name="renderFile"></a>
-
-## renderFile(response, relativePath, contentType)
-Renders a file as part of a response to a request
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| response | <code>\*</code> | Object representing the response |
-| relativePath | <code>String</code> | Relative path to the file to be rendered |
-| contentType | <code>String</code> | The media type of the file |
-
-<a name="validateJSON"></a>
-
-## validateJSON(jsonStr)
-Validates that the argument is a valid JSON text or JSON value
-
-**Kind**: global function  
-**Throws**:
-
-- Throws error if the argument is an invalid JSON value
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| jsonStr | <code>\*</code> | Argument passed by user to visualise |
-
-<a name="validatePort"></a>
-
-## validatePort(port)
-Validates that the argument is a valid port number
-
-**Kind**: global function  
-**Throws**:
-
-- Throws error if the argument is an invalid port number
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| port | <code>Number</code> | Port number to be validated |
 
 
 ## Acknowledgements
