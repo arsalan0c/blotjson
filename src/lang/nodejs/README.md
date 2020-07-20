@@ -9,7 +9,7 @@
 
 ---
 
-### Why *blotjson*?
+## Why *blotjson*?
 * There is no need to copy/paste or export your data
 * Everything is done locally on your own computer
 * An arbitrary number of JSON datum can be easily visualised
@@ -143,6 +143,6 @@ Validates that the argument is a valid port number
 | port | <code>Number</code> | Port number to be validated |
 
 
-### Acknowledgements
+## Acknowledgements
 
 The design of displaying the data is in part inspired by [Swagger](https://swagger.io)
