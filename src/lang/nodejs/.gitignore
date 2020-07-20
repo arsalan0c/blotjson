@@ -1,4 +1,4 @@
-node_modules/
+node_modules/ 
 
 # unnecesary files made by vim
 *gitignore*
@@ -11,3 +11,8 @@ public/
 src/userTest.js
 src/frontend.js
 src/index.html
+
+# jsdoc
+out/index.html
+out/index.js.html
+!out/global.html

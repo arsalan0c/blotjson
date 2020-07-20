@@ -64,8 +64,8 @@ function visualise(jsonStr) {
 
 /**
  * Sets the port of the server to a custom user-defined port
- * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
- * @returns {Object} Object whose keys point to the blot functions
+ * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user. Port value must be at least 1024
+ * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function setPort(customPort) {
   validatePort(customPort);
@@ -76,9 +76,12 @@ function setPort(customPort) {
 /**
  * Configures whether the browser should open automatically
  * @param bool Whether the browser should open automatically
- * @returns {Object} Object whose keys point to the blot functions
+ * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function shouldOpenBrowser(bool = true) {
+  if (typeof bool !== 'boolean') {
+    throw new Error(errors.NON_BOOLEAN_ARGUMENT_ERROR);
+  }
   openBrowser = bool;
   return blotFns;
 }
@@ -164,15 +167,12 @@ function renderFile(response, relativePath, contentType) {
 }
 
 /**
- * Validates that the argument passed to visualise is a valid JSON string
+ * Validates that the argument is a valid JSON text or JSON value
  * @param {*} jsonStr Argument passed by user to visualise
  * @throws Throws error if the argument is an invalid JSON value
  */
 function validateJSON(jsonStr) {
   try {
-    if (!jsonStr) {
-      throw new Error();
-    }
     JSON.parse(jsonStr);
   } catch (e) {
     throw new Error(errors.INVALID_JSON_ERROR);
@@ -180,14 +180,14 @@ function validateJSON(jsonStr) {
 }
 
 /**
- * Validates that the port passed to setPort is a valid port number
+ * Validates that the argument is a valid port number
  * @param {Number} port Port number to be validated
  * @throws Throws error if the argument is an invalid port number
  */
 function validatePort(port) {
   if (!Number.isInteger(port)) {
     throw new Error(errors.NON_INTEGER_PORT_ERROR);
-  } else if (port <= 0 || port >= 65536) {
+  } else if (port <= 1024 || port >= 65536) {
     throw new Error(errors.INVALID_PORT_NUMBER_ERROR);
   }
 }
