@@ -1,22 +1,17 @@
 ![Alt text](./logo_light.svg) 
-# blotjson
+# blotjson<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-dae1e7.svg"></a>
 
-**Blot:**
-> a procedure in which proteins or nucleic acids separated on a gel are transferred directly to an immobilizing medium for identification.
+<p align=center><img src=./logo_light.svg></p>
+<p align=center><b>blotjson</b></p>
 
-*blotjson* displays [JSON](https://www.json.org/json-en.html) in a browser, directly from backend application code to make it easier to make sense of API responses. This is especially if they are not well documented.
+<p align=center><i>blotjson</i> is a tool to help you make sense of API responses by displaying <a href="https://www.json.org/json-en.html">JSON</a> in a browser, directly from backend code where the JSON is received</p>
 
-## Features
-* JSON is pretty printed
-* objects and arrays can be collapsed for simpler exploration
-* supports dark mode
+---
 
 ## Why *blotjson*?
-* An external application is not required. There is no need to copy/paste or export your data
-* An arbitrary number of JSON data can be visualised simply
-* Security. Everything is done locally on your own computer.
-
-## Basic Usage
+* There is no need to copy/paste or export your data
+* Everything is done locally on your own computer
+* An arbitrary number of JSON datum can be easily visualised## Basic Usage
 
 ### Node.js
 **Installation**
@@ -32,18 +27,6 @@ blot.visualise(JSON.stringify(
 ));
 ```
 
-For further details on how to use blotjson on Node.js, go [here](./src/lang/nodejs/README.md)
-
-## Features
-* JSON is pretty printed
-* objects and arrays can be collapsed for simpler exploration
-* supports dark mode
-
-## Why *blotjson*?
-* An external application is not required. There is no need to copy/paste or export your data
-* An arbitrary number of JSON data can be visualised simply
-* Security. Everything is done locally on your own computer.
-
-## Acknowledgements
+For further details on how to use blotjson on Node.js, go [here](./src/lang/nodejs/README.md)## Acknowledgements
 
 The design of displaying the data is in part inspired by [Swagger](https://swagger.io)
