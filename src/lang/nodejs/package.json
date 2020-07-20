@@ -1,7 +1,14 @@
 {
   "name": "blotjson",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A module to simplify visualisation of JSON.",
+  "keywords": [
+    "JSON",
+    "json",
+    "visualise",
+    "pretty print",
+    "blot"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "jest --forceExit",
