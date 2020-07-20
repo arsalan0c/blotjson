@@ -7,7 +7,7 @@
 
 ---
 
-## Why *blotjson*?
+### Why *blotjson*?
 * There is no need to copy/paste or export your data
 * Everything is done locally on your own computer
 * An arbitrary number of JSON datum can be easily visualised
