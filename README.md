@@ -3,7 +3,7 @@
 
 <p align=center><b>blotjson</b></p>
 
-<p align=center><i>blotjson</i> is a tool to help you make sense of API responses by displaying <a href="https://www.json.org/json-en.html">JSON</a> in a browser, <br />directly from backend code where the JSON is received</p>
+<p align=center><i>blotjson</i> is a tool to help you make sense of API responses by displaying <i>JSON</i> in a browser, <br />directly from backend code where the <i>JSON</i> is received</p>
 
 ---
 
