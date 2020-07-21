@@ -13,6 +13,7 @@ import (
 )
 
 // frontend file paths
+
 const htmlFilePath string = "./dist/index.html"
 const darkLogoPath string = "./dist/images/logo_dark.svg"
 const lightLogoPath string = "./dist/images/logo_light.svg"
@@ -23,7 +24,7 @@ const lightLogoURL string = "/images/logo_light.svg"
 const darkLogoURL string = "/images/logo_dark.svg"
 
 const invalidPortNumberError string = "Invalid port number"
-const invalidJSONError string = "Visualise must take in a valid JSON value"
+const invalidJSONError string = "Invalid JSON value or JSON text"
 
 // networking
 
@@ -36,14 +37,14 @@ var port = defaultPort
 var connection *websocket.Conn
 var connectionMux = sync.Mutex{}
 var waitingData []string
-var isRunning bool = false
+var isRunning = false
 var openBrowser = true
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
 
-// Displays json data in a browser
+// Visualise Displays json data in a browser
 func Visualise(jsonStr string) error {
 	if err := validateJSON(jsonStr); err != nil {
 		return err
@@ -81,8 +82,8 @@ func validateJSON(jsonStr string) error {
 	return nil
 }
 
-// Sets the port number
-func setPort(customPort int) error {
+// SetPort sets the port number to the provided number, which should be between 1024 and 65535 (inclusive)
+func SetPort(customPort int) error {
 	if err := validatePort(customPort); err != nil {
 		return err
 	}
@@ -99,8 +100,8 @@ func validatePort(port int) error {
 	return nil
 }
 
-// Sets whether the browser should be automatically opened
-func shouldOpenBrowser(open bool) {
+// ShouldOpenBrowser Sets whether the browser should be automatically opened. true by default
+func ShouldOpenBrowser(open bool) {
 	openBrowser = open
 }
 

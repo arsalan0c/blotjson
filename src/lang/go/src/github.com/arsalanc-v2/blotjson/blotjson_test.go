@@ -2,6 +2,7 @@ package blotjson
 
 import (
 	"flag"
+	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/url"
@@ -13,12 +14,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const bigJSON = "../../../../../../test/bigTest.json"
+
 var clientConnection *websocket.Conn
 var addr = flag.String("addr", "localhost:3000", "http service address")
 
 func beforeAll() {
-	setPort(3000)
-	shouldOpenBrowser(false)
+	SetPort(3000)
+	ShouldOpenBrowser(false)
 }
 
 func afterAll() {
@@ -33,7 +36,7 @@ func Test_Str(t *testing.T) {
 	require.Equal(t, invalidJSONError, err.Error())
 }
 
-func Test_JsonStr(t *testing.T) {
+func Test_StrJSON(t *testing.T) {
 	testData := `""`
 	checkEqualTest(t, testData)
 }
@@ -61,6 +64,11 @@ func Test_Null(t *testing.T) {
 func Test_Array(t *testing.T) {
 	testData := "[1, 2, 3, 4, 5]"
 	checkEqualTest(t, testData)
+}
+
+func Test_BigJSON(t *testing.T) {
+	testData, _ := ioutil.ReadFile(bigJSON)
+	checkEqualTest(t, string(testData))
 }
 
 func Test_IncompleteArray(t *testing.T) {
@@ -96,20 +104,20 @@ func Test_MultipleCallsDelayed(t *testing.T) {
 }
 
 func TestPortLower(t *testing.T) {
-	err := setPort(minPort - 1)
+	err := SetPort(minPort - 1)
 	require.Equal(t, invalidPortNumberError, err.Error())
 }
 
 func TestPortBoundaries(t *testing.T) {
-	errMin := setPort(minPort)
+	errMin := SetPort(minPort)
 	require.Equal(t, nil, errMin)
 
-	errMax := setPort(maxPort)
+	errMax := SetPort(maxPort)
 	require.Equal(t, nil, errMax)
 }
 
 func TestPortHigher(t *testing.T) {
-	err := setPort(maxPort + 1)
+	err := SetPort(maxPort + 1)
 	require.Equal(t, invalidPortNumberError, err.Error())
 }
 
