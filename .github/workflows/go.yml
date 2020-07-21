@@ -39,4 +39,7 @@ jobs:
 
       - name: Test
         run: go test -race -coverprofile=coverage.txt -covermode=atomic
+      
+      - name: Code coverage
+        uses: codecov/codecov-action@v1
         
