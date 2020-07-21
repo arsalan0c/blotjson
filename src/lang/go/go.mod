@@ -1,4 +1,4 @@
-module github.com/arsalanc-v2/blotjson
+module blotjson
 
 go 1.13
 
