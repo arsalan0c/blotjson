@@ -167,10 +167,12 @@ func serveDarkLogo(w http.ResponseWriter, r *http.Request) {
 
 // Resets configuration and terminates the websocket connection
 func reset() {
+	connectionMux.Lock()
 	connection.Close()
 	connection = nil
-	http.DefaultServeMux = new(http.ServeMux)
+	connectionMux.Unlock()
 
+	http.DefaultServeMux = new(http.ServeMux)
 	isRunning = false
 	waitingData = nil
 	port = defaultPort
