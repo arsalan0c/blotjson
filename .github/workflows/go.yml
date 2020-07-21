@@ -32,8 +32,7 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Lint
-        run: go get -u golang.org/x/lint/golint
-        run: go list -f {{.Target}} golang.org/x/lint/golint | sh
+        run: go get -u golang.org/x/lint/golint && go list -f {{.Target}} golang.org/x/lint/golint | sh 
 
       - name: Build
         run: go build -v .
