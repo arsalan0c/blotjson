@@ -35,7 +35,7 @@ jobs:
         run: go build -v .
       
       - name: Lint
-      run: go list -f {{.Target}} golang.org/x/lint/golint | sh
+        run: go list -f {{.Target}} golang.org/x/lint/golint | sh
 
       - name: Test
         run: go test -race -coverprofile=coverage.txt -covermode=atomic
