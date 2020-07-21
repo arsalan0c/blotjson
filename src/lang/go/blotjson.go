@@ -140,9 +140,9 @@ func upgradeConnection(w http.ResponseWriter, r *http.Request) *websocket.Conn {
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		if r.Host == fmt.Sprintf("%s:%d", host, port) {
 			return true
-		} else {
-			return false
 		}
+
+		return false
 	}
 
 	conn, err := upgrader.Upgrade(w, r, nil)
