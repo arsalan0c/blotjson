@@ -30,12 +30,13 @@ jobs:
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
+      
+      - name: Lint
+        run: go get -u golang.org/x/lint/golint
+        run: go list -f {{.Target}} golang.org/x/lint/golint | sh
 
       - name: Build
         run: go build -v .
-      
-      - name: Lint
-      run: go list -f {{.Target}} golang.org/x/lint/golint | sh
 
       - name: Test
         run: go test -race -coverprofile=coverage.txt -covermode=atomic
