@@ -1,0 +1,30 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Nodejs CD
+
+on:
+  push:
+    branches: 
+      - master
+    paths:
+      - "src/lang/nodejs/*"
+      - "src/frontend/*"
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org
+      - run: cd src/frontend && npm ci && npm run build
+      - run: cd src/lang/nodejs && npm ci && npm run transfer-files && npm run generate-docs && cp README.md ../../dist/
+      - run: npm publish src/dist/
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} 

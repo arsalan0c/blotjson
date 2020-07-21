@@ -7,7 +7,6 @@ const errors = require('./errorMessages.js');
 
 /* CONSTANTS */
 
-// Frontend file paths
 const HTML_FILE_PATH = './index.html';
 const DARK_LOGO_PATH = './images/logo_dark.svg';
 const LIGHT_LOGO_PATH = './images/logo_light.svg';
@@ -16,10 +15,12 @@ const HTML_URL = '/';
 const LIGHT_LOGO_URL = '/images/logo_light.svg';
 const DARK_LOGO_URL = '/images/logo_dark.svg';
 
+/* NETWORKING VARIABLES */
+
+const MIN_PORT = 1024;
+const MAX_PORT = 65535;
 const DEFAULT_PORT = 9101;
 const HOST = 'http://127.0.0.1';
-
-/* NETWORKING VARIABLES */
 
 let httpServer = null;
 let connection = null; // refers to the web socket connection to the client once connection is established
@@ -64,8 +65,8 @@ function visualise(jsonStr) {
 
 /**
  * Sets the port of the server to a custom user-defined port
- * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user
- * @returns {Object} Object whose keys point to the blot functions
+ * @param {Number} customPort Port which the user wants to use for the network connection between browser and server. Default port of 9101 will be used if not provided by user. Port value must be at least 1024
+ * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function setPort(customPort) {
   validatePort(customPort);
@@ -76,9 +77,12 @@ function setPort(customPort) {
 /**
  * Configures whether the browser should open automatically
  * @param bool Whether the browser should open automatically
- * @returns {Object} Object whose keys point to the blot functions
+ * @returns {Object} Object whose keys point to the blot functions, to allow function chaining
  */
 function shouldOpenBrowser(bool = true) {
+  if (typeof bool !== 'boolean') {
+    throw new Error(errors.NON_BOOLEAN_ARGUMENT_ERROR);
+  }
   openBrowser = bool;
   return blotFns;
 }
@@ -86,6 +90,7 @@ function shouldOpenBrowser(bool = true) {
 /**
  * Creates and sets up a server which listens on the specified port
  * @param {Number} port Port on which the server listens
+ * @ignore
  */
 function startServer(port) {
   httpServer = http.createServer((req, res) => {
@@ -121,6 +126,7 @@ function startServer(port) {
 /**
  * Sets up the websocket on the server end. Defines event handlers for web socket connection.
  * @param {*} jsonStr json data passed as argument to first visualise call
+ * @ignore
  */
 function setWebsocket() {
   const webSocket = new WebSocketServer({
@@ -144,6 +150,7 @@ function setWebsocket() {
  * @param {*} response Object representing the response
  * @param {String} relativePath Relative path to the file to be rendered
  * @param {String} contentType The media type of the file
+ * @ignore
  */
 function renderFile(response, relativePath, contentType) {
   const absPath = path.resolve(__dirname, relativePath);
@@ -164,15 +171,13 @@ function renderFile(response, relativePath, contentType) {
 }
 
 /**
- * Validates that the argument passed to visualise is a valid JSON string
+ * Validates that the argument is a valid JSON text or JSON value
  * @param {*} jsonStr Argument passed by user to visualise
  * @throws Throws error if the argument is an invalid JSON value
+ * @ignore
  */
 function validateJSON(jsonStr) {
   try {
-    if (!jsonStr) {
-      throw new Error();
-    }
     JSON.parse(jsonStr);
   } catch (e) {
     throw new Error(errors.INVALID_JSON_ERROR);
@@ -180,14 +185,15 @@ function validateJSON(jsonStr) {
 }
 
 /**
- * Validates that the port passed to setPort is a valid port number
+ * Validates that the argument is a valid port number
  * @param {Number} port Port number to be validated
  * @throws Throws error if the argument is an invalid port number
+ * @ignore
  */
 function validatePort(port) {
   if (!Number.isInteger(port)) {
     throw new Error(errors.NON_INTEGER_PORT_ERROR);
-  } else if (port <= 0 || port >= 65536) {
+  } else if (port < MIN_PORT || port > MAX_PORT) {
     throw new Error(errors.INVALID_PORT_NUMBER_ERROR);
   }
 }

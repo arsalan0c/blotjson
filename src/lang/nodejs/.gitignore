@@ -1,13 +1,18 @@
+public/
+coverage/
 node_modules/
 
 # unnecesary files made by vim
 *gitignore*
 *~
 
-# folders
-public/
-
 # files
 src/userTest.js
 src/frontend.js
 src/index.html
+
+# jsdoc
+out/index.html
+out/index.js.html
+!out/global.html
+
