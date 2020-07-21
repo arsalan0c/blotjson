@@ -1,22 +1,26 @@
 name: Go CI
-
 on:
   push:
     paths:
-      - "src/lang/go/github.com/arsalanc-v2/blotjson"
+      - ".github/workflows/go.yml"
+      - "src/lang/go/*"
   pull_request:
     paths:
-      - "src/lang/go/github.com/arsalanc-v2/blotjson"
-
+      - ".github/workflows/go.yml"
+      - "src/lang/go/*"
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-latest
     defaults:
         run:
           working-directory: ./src/lang/go
+          
     steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2.1.0
+        with:
+          go-version: ^1.13
 
     - name: Set up Go
       uses: actions/setup-go@v2
