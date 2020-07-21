@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const bigJSON = "../../../../../../test/bigTest.json"
+const bigJSON = "../../../../test/bigTest.json"
 
 var clientConnection *websocket.Conn
 var addr = flag.String("addr", "localhost:3000", "http service address")
