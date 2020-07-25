@@ -47,7 +47,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run fixstyle && npm run generate-docs && git add README.md"
+      "pre-commit": "npm run fixstyle && npm run generate-docs && git add README.md && cd ../../../ && npm run generate-main-readme && git add README.md"
     }
   }
 }
