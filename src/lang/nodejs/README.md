@@ -19,6 +19,19 @@
 * There is no need to copy/paste or export your data
 * Everything is done locally on your own computer
 * An arbitrary number of JSON datum can be easily visualised
+
+**Installation**
+```
+npm i --save-dev blotjson
+```
+**Example**
+```js
+const blot = require('blotjson');
+
+blot.visualise(JSON.stringify(
+  ['foo', { 'bar': null, 'baz': 1.0 }]
+));
+```
 ## Functions
 
 <dl>
