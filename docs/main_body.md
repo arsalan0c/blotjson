@@ -10,7 +10,7 @@ npm i --save-dev blotjson
 const blot = require('blotjson');
 
 blot.visualise(JSON.stringify(
-  ['foo', {'bar': ('baz', null, 1.0, 2)}]
+  { 'bar': null, 'baz': 1.0 }
 ));
 ```
 
