@@ -58,7 +58,8 @@ func Visualise(jsonStr string) error {
 		go setupServer()
 	} else if connection != nil {
 		var toSend string
-		toSend, dataQueue = dataQueue[len(dataQueue)-1], dataQueue[:len(dataQueue)-1]
+		lastIndex := len(dataQueue) - 1
+		toSend, dataQueue = dataQueue[lastIndex], dataQueue[:lastIndex]
 		connection.WriteMessage(websocket.TextMessage, []byte(toSend))
 	}
 	connectionMux.Unlock()
