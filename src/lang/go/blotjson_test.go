@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/url"
 	"strconv"
+	"sync"
 	"testing"
 	"time"
 
@@ -18,8 +19,10 @@ const bigJSON = "../../test/bigTest.json"
 
 var clientConnection *websocket.Conn
 var addr = flag.String("addr", "localhost:3000", "http service address")
+var testMux = sync.Mutex{}
 
 func beforeAll() {
+	testMux.Lock()
 	SetPort(3000)
 	ShouldOpenBrowser(false)
 }
@@ -28,6 +31,7 @@ func afterAll() {
 	clientConnection.Close()
 	clientConnection = nil
 	reset()
+	testMux.Unlock()
 }
 
 func Test_Str(t *testing.T) {

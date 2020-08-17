@@ -13,19 +13,27 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     defaults:
-      run:
-        working-directory: ./src/lang/go/src/blotjson
+        run:
+          working-directory: ./src/lang/go
+          
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2.1.0
         with:
           go-version: ^1.13
 
-      - name: Check out source code
-        uses: actions/checkout@v1
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      
+      - name: Lint
+        run: go get -u golang.org/x/lint/golint && go list -f {{.Target}} golang.org/x/lint/golint | sh 
 
       - name: Build
-        run: go build .
+        run: go build -v .
 
       - name: Test
-        run: go test -v .
+        run: go test -race -coverprofile=coverage.txt -covermode=atomic
+      
+      - name: Code coverage
+        uses: codecov/codecov-action@v1
+        

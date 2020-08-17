@@ -12,22 +12,22 @@ import (
 	"github.com/pkg/browser"
 )
 
-// frontend file paths
+// Errors
+const invalidPortNumberError string = "Invalid port number"
+const invalidJSONError string = "Invalid JSON value or JSON text"
 
+// Frontend File Paths
 const htmlFilePath string = "./dist/index.html"
 const darkLogoPath string = "./dist/images/logo_dark.svg"
 const lightLogoPath string = "./dist/images/logo_light.svg"
 
+// URLs
 const wsURL string = "/ws"
 const htmlURL string = "/"
 const lightLogoURL string = "/images/logo_light.svg"
 const darkLogoURL string = "/images/logo_dark.svg"
 
-const invalidPortNumberError string = "Invalid port number"
-const invalidJSONError string = "Invalid JSON value or JSON text"
-
-// networking
-
+// Networking
 const host = "localhost"
 const minPort int = 1024
 const maxPort int = 65535
@@ -36,8 +36,9 @@ const defaultPort int = 9101
 var port = defaultPort
 var connection *websocket.Conn
 var connectionMux = sync.Mutex{}
-var waitingData []string
-var isRunning = false
+
+var dataQueue []string
+var isRunning = false // to perform processes only on first call such as server setup
 var openBrowser = true
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -50,23 +51,17 @@ func Visualise(jsonStr string) error {
 		return err
 	}
 
+	dataQueue = append(dataQueue, jsonStr)
 	connectionMux.Lock()
 	if !isRunning {
 		isRunning = true
-		waitingData = append(waitingData, jsonStr)
-
-		connectionMux.Unlock()
 		go setupServer()
-	} else if connection == nil {
-		waitingData = append(waitingData, jsonStr)
-
-		// release lock after appending:
-		// to avoid the case where the websocket sends all the data in waitingData before jsonStr has been appended
-		connectionMux.Unlock()
-	} else {
-		connection.WriteMessage(websocket.TextMessage, []byte(jsonStr))
-		connectionMux.Unlock()
+	} else if connection != nil {
+		var toSend string
+		toSend, dataQueue = dataQueue[0], dataQueue[1:]
+		connection.WriteMessage(websocket.TextMessage, []byte(toSend))
 	}
+	connectionMux.Unlock()
 
 	return nil
 }
@@ -122,14 +117,16 @@ func setupServer() {
 }
 
 // Defines the websocket handler
-// Sends data in waitingData if the connection is successful
+// Sends data in dataQueue if the connection is successful
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	if conn := upgradeConnection(w, r); conn != nil {
 		connectionMux.Lock()
 		connection = conn
 
-		for _, data := range waitingData {
-			connection.WriteMessage(websocket.TextMessage, []byte(data))
+		for len(dataQueue) > 0 {
+			var toSend string
+			toSend, dataQueue = dataQueue[0], dataQueue[1:]
+			connection.WriteMessage(websocket.TextMessage, []byte(toSend))
 		}
 
 		connectionMux.Unlock()
@@ -140,9 +137,9 @@ func upgradeConnection(w http.ResponseWriter, r *http.Request) *websocket.Conn {
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		if r.Host == fmt.Sprintf("%s:%d", host, port) {
 			return true
-		} else {
-			return false
 		}
+
+		return false
 	}
 
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -167,12 +164,14 @@ func serveDarkLogo(w http.ResponseWriter, r *http.Request) {
 
 // Resets configuration and terminates the websocket connection
 func reset() {
+	connectionMux.Lock()
 	connection.Close()
 	connection = nil
-	http.DefaultServeMux = new(http.ServeMux)
+	connectionMux.Unlock()
 
+	http.DefaultServeMux = new(http.ServeMux)
 	isRunning = false
-	waitingData = nil
+	dataQueue = nil
 	port = defaultPort
 	openBrowser = true
 }
